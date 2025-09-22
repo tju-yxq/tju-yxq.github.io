@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>计算机系统 on 小段子的博客</title>
-    <link>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</link>
+    <link>https://tju-yxq.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</link>
     <description>Recent content in 计算机系统 on 小段子的博客</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 04 Jun 2018 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://tju-yxq.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>计算机系统基础1 笔记1</title>
-      <link>http://localhost:1313/post/my-first-post/</link>
+      <link>https://tju-yxq.github.io/post/my-first-post/</link>
       <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/post/my-first-post/</guid>
+      <guid>https://tju-yxq.github.io/post/my-first-post/</guid>
       <description>&lt;h3 id=&#34;linux-命令笔记&#34;&gt;Linux 命令笔记&lt;/h3&gt;&#xA;&lt;h4 id=&#34;一文件和目录操作&#34;&gt;一、文件和目录操作&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;&lt;code&gt;ls&lt;/code&gt;&lt;/strong&gt;：列出目录内容&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;ls -a&lt;/code&gt;：显示隐藏文件（以 &lt;code&gt;.&lt;/code&gt; 开头）&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;ls -l&lt;/code&gt;：显示文件和目录的详细属性（权限、所有者等）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;&lt;code&gt;cd&lt;/code&gt;&lt;/strong&gt;：切换目录&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;cd&lt;/span&gt; /path/to/directory  &lt;span style=&#34;color:#6272a4&#34;&gt;# 进入指定目录&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;&lt;code&gt;pwd&lt;/code&gt;&lt;/strong&gt;：显示当前工作目录路径&lt;/p&gt;</description>
     </item>
   </channel>

@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://tju-yxq.github.io/categories/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/post/</loc>
+    <loc>https://tju-yxq.github.io/post/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://tju-yxq.github.io/tags/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://tju-yxq.github.io/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</loc>
+    <loc>https://tju-yxq.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</loc>
+    <loc>https://tju-yxq.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/post/my-first-post/</loc>
+    <loc>https://tju-yxq.github.io/post/my-first-post/</loc>
     <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://tju-yxq.github.io/about/</loc>
   </url><url>
-    <loc>http://localhost:1313/notes/</loc>
+    <loc>https://tju-yxq.github.io/notes/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/placeholder/</loc>
+    <loc>https://tju-yxq.github.io/search/placeholder/</loc>
   </url><url>
-    <loc>http://localhost:1313/archive/</loc>
+    <loc>https://tju-yxq.github.io/archive/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>https://tju-yxq.github.io/search/</loc>
   </url>
 </urlset>
