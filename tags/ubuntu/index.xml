@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ubuntu on Huabing Blog</title>
+    <link>http://localhost:1313/tags/ubuntu/</link>
+    <description>Recent content in Ubuntu on Huabing Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 24 May 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Everything about Setting Up My Ubuntu Desktop</title>
+      <link>http://localhost:1313/2018/05/24/set_up_my_ubuntu_desktop/</link>
+      <pubDate>Thu, 24 May 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/2018/05/24/set_up_my_ubuntu_desktop/</guid>
+      <description>&lt;h2 id=&#34;generate-ssh-key-pair&#34;&gt;Generate SSH Key Pair&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ssh-keygen -C &amp;#34;zhaohuabing@gmail.com&amp;#34;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;shadowsocks&#34;&gt;Shadowsocks&lt;/h2&gt;&#xA;&lt;p&gt;Install shadowsokcs&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo apt-get install python3-pip&#xD;&#xA;&#xD;&#xA;sudo pip3 install shadowsocks&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Create config at &lt;code&gt;config/shadowsocks.json&lt;/code&gt;, with the following content:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{&#xD;&#xA;&#x9;&amp;#34;server&amp;#34;:&amp;#34;remote-shadowsocks-server-ip-addr&amp;#34;,&#xD;&#xA;&#x9;&amp;#34;server_port&amp;#34;:443,&#xD;&#xA;&#x9;&amp;#34;local_address&amp;#34;:&amp;#34;127.0.0.1&amp;#34;,&#xD;&#xA;&#x9;&amp;#34;local_port&amp;#34;:1080,&#xD;&#xA;&#x9;&amp;#34;password&amp;#34;:&amp;#34;your-passwd&amp;#34;,&#xD;&#xA;&#x9;&amp;#34;timeout&amp;#34;:300,&#xD;&#xA;&#x9;&amp;#34;method&amp;#34;:&amp;#34;aes-256-cfb&amp;#34;,&#xD;&#xA;&#x9;&amp;#34;fast_open&amp;#34;:false,&#xD;&#xA;&#x9;&amp;#34;workers&amp;#34;:1&#xD;&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Start a local socks proxy&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo sslocal -c config/shadowsocks.json -d start&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In case there is an openssl error, modify shadowsocks source file.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo vi /usr/local/lib/python3.6/dist-packages/shadowsocks/crypto/openssl.py &#xD;&#xA;&#xD;&#xA;:%s/cleanup/reset/gc&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Convert shadowsocks socks proxy to http proxy&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo apt-get install polipo&#xD;&#xA;&#xD;&#xA;echo &amp;#34;socksParentProxy = localhost:1080&amp;#34; | sudo tee -a /etc/polipo/config &#xD;&#xA;sudo service polipo restart&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Http proxy now is available at port 8123&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

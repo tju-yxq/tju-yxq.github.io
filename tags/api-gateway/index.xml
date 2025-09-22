@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>API Gateway on Huabing Blog</title>
+    <link>http://localhost:1313/tags/api-gateway/</link>
+    <description>Recent content in API Gateway on Huabing Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 Apr 2018 09:32:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/api-gateway/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Service Mesh 和 API Gateway的关系探讨（译文）</title>
+      <link>http://localhost:1313/2018/04/11/service-mesh-vs-api-gateway/</link>
+      <pubDate>Wed, 11 Apr 2018 09:32:00 +0000</pubDate>
+      <guid>http://localhost:1313/2018/04/11/service-mesh-vs-api-gateway/</guid>
+      <description>&lt;h2 id=&#34;service-mesh-vs-api-gateway&#34;&gt;Service Mesh vs API Gateway&lt;/h2&gt;&#xA;&lt;p&gt;在&lt;a href=&#34;https://medium.com/microservices-in-practice/service-mesh-for-microservices-2953109a3c9a&#34;&gt;前一篇关于Service Mesh的文章&lt;/a&gt;中,我提到了几个关于Service Mesh和API Gateway之间关系的问题，在本篇文章中，我打算就Service Mesh和API Gateway的用途进行进一步讨论。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

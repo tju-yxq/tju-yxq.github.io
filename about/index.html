@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="小段子的博客">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://zhaohuabing.com//img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="https://zhaohuabing.com//img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="" />
+    <meta property="og:title" content="" />
+    <meta property="twitter:title" content="" />
+    
+
+    
+    <meta name="description" content="小段子，天大智算在读本科生, | 这里是 小段子 的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="小段子，天大智算在读本科生, | 这里是 小段子 的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="小段子，天大智算在读本科生, | 这里是 小段子 的博客，与你一起发现更大的世界。" />
+    
+
+    <meta property="og:url" content="https://zhaohuabing.com/about/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="小段子，网安">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>小段子的博客 | xdz&#39;s Blog</title>
+
+    <link rel="canonical" href="/about/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小段子的博客</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/">计算机系统</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive//">ARCHIVE</a></li>
+                    
+                        <li><a href="/notes//">NOTES</a></li>
+                    
+                        <li><a href="/about//">ABOUT</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<header class="intro-header" style="background-image: url('/img/home-bg-jeep.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>小段子的博客 </h1>
+                    
+		    <span class="subheading">流水不争先，只争涓涓细流</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+            
+            <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
+                 
+ <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
+    <option value="0" selected> 中文 | Chinese </option>
+    <option value="1"> 英文 | English </option>
+</select>
+
+                
+                <div class="zh post-container">
+                    
+                    <h2 id="关于我">关于我</h2>
+<p>您好，我是<strong>小段子</strong>。一名就读于<strong>天津大学网络空间安全专业</strong>的在读本科生，目前在胡一涛老师实验室下进行科研学习，目前的研究方向是文生视频，对技术充满热情，坚信代码的核心是解决实际问题。我专注于<strong>后端开发</strong>与<strong>数据科学</strong>领域，享受从海量数据中挖掘价值，并用坚实的软件架构将其实现为可靠产品的过程。这个博客是我记录技术思考、项目实践和学习心得的地方。</p>
+<h2 id="获奖荣誉">获奖荣誉</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">荣誉名称</th>
+          <th style="text-align: left">级别</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">2024 Kaggle - NeurIPS 2024 - Lux AI Season 3 铜奖 (Top 15)</td>
+          <td style="text-align: left">国家级</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">NITRIO 国际奖学金</td>
+          <td style="text-align: left">校级</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2025 美国大学生数学建模竞赛H奖</td>
+          <td style="text-align: left">国家级</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">全国大学生数学竞赛非数学类组一等奖 (天津市第七)</td>
+          <td style="text-align: left">省部级</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">天津市大学生数学竞赛一等奖</td>
+          <td style="text-align: left">省部级</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">北洋启航自立奖</td>
+          <td style="text-align: left">校级</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="项目">项目</h2>
+<h4 id="天大点评校园生活服务平台">天大点评—校园生活服务平台</h4>
+<ul>
+<li><strong>角色</strong>: 后端开发 &amp; 产品主导</li>
+<li><strong>时间</strong>: 2025.03 - 至今</li>
+<li><strong>项目描述</strong>: 为提升校园服务透明度，我独立规划并主导开发了“天大点评”平台。项目涵盖食堂、课程、教室设施等多个模块，支持用户点评、评分与排行查询，旨在构建一个开放、互助的校园信息共享社区。</li>
+<li><strong>技术栈</strong>: <code>Spring Boot</code> / <code>MyBatis Plus</code> / <code>Redis</code> / <code>RabbitMQ</code> / <code>MySQL</code> / <code>Git</code></li>
+<li><strong>我的贡献</strong>:
+<ul>
+<li>独立完成需求调研、功能规划与产品原型设计。</li>
+<li>负责数据库结构设计，并使用 Spring Boot + MyBatis 栈开发了平台的核心后端服务。</li>
+<li>通过 JWT 实现用户认证与权限控制，保障平台安全。</li>
+</ul>
+</li>
+</ul>
+<h2 id="科研">科研</h2>
+<h4 id="数智化餐饮服务系统下消费者行为与运营管理策略研究">数智化餐饮服务系统下消费者行为与运营管理策略研究</h4>
+<ul>
+<li><strong>角色</strong>: 数据分析负责人</li>
+<li><strong>级别</strong>: 国家级大学生创新创业训练计划项目 (国家级大创)</li>
+<li><strong>时间</strong>: 2024.04 - 2026.04 (预计)</li>
+<li><strong>研究简介</strong>: 本项目结合排队经济学与数据科学，旨在探究数智时代下的消费者行为规律，为餐饮服务商提供最优运营策略。</li>
+<li><strong>我的贡献</strong>:
+<ul>
+<li>主导数据分析工作，负责对初期收集的近万条餐饮交易数据进行处理与分析。</li>
+<li>综合运用 <code>Python</code>, <code>SQL</code> 等工具进行数据挖掘，并借助 <code>Tableau</code> 完成数据可视化。</li>
+<li>成功提炼出 5 个关键的消费者行为模式，为项目后续的策略研究提供了坚实的数据支撑。</li>
+</ul>
+</li>
+</ul>
+                </div>
+            
+                
+                <div class="en post-container">
+                    <h3 id="about-me">About Me</h3>
+<p>Hi, I&rsquo;m <strong>Duan</strong>, also known as <strong>小段子 (Xiao Duanzi)</strong>. I am an undergraduate student majoring in <strong>Cybersecurity</strong> at <strong>Tianjin University</strong>, currently conducting research in Professor Yitao Hu&rsquo;s lab with a focus on Text-to-Video generation.</p>
+<p>I am passionate about technology and firmly believe that the core purpose of code is to solve real-world problems. My primary focus is on <strong>Backend Development</strong> and <strong>Data Science</strong>, and I enjoy the process of uncovering value from vast amounts of data and transforming it into reliable products through robust software architecture. This blog is where I document my technical thoughts, project experiences, and learning journey.</p>
+<h3 id="honors--awards">Honors &amp; Awards</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Honor</th>
+          <th style="text-align: left">Level</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">2024 Kaggle - NeurIPS 2024 - Lux AI Season 3 Bronze (Top 15)</td>
+          <td style="text-align: left">National</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">NITRIO International Scholarship</td>
+          <td style="text-align: left">University-level</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2025 MCM/ICM Honorable Mention</td>
+          <td style="text-align: left">National</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">National College Mathematics Competition, First Prize (7th in Tianjin)</td>
+          <td style="text-align: left">Provincial/Ministry</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Tianjin College Mathematics Competition, First Prize</td>
+          <td style="text-align: left">Provincial/Ministry</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Beiyang Qihang Self-Reliance Award</td>
+          <td style="text-align: left">University-level</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="projects">Projects</h3>
+<h4 id="tju-dianping--a-campus-life-service-platform">TJU-Dianping — A Campus Life Service Platform</h4>
+<ul>
+<li><strong>Role</strong>: Backend Developer &amp; Product Lead</li>
+<li><strong>Time</strong>: March 2025 - Present</li>
+<li><strong>Description</strong>: To improve the transparency and interactivity of campus services, I independently planned and led the development of the &ldquo;TJU-Dianping&rdquo; platform. The project covers various modules such as cafeterias, courses, and classroom facilities, allowing users to post reviews, ratings, and browse rankings.</li>
+<li><strong>My Contributions</strong>:
+<ul>
+<li>Independently conducted requirement analysis, feature planning, and designed product prototypes.</li>
+<li>Designed the database schema and developed the core backend services using a tech stack of <code>Spring Boot</code>, <code>MyBatis</code>, <code>Redis</code>, <code>RabbitMQ</code>, and <code>MySQL</code>.</li>
+<li>Implemented user authentication and authorization using JWT to ensure platform security.</li>
+<li>Wrote RESTful APIs to ensure seamless communication between the frontend and backend.</li>
+</ul>
+</li>
+</ul>
+<h3 id="research">Research</h3>
+<h4 id="research-on-consumer-behavior-and-operational-management-strategies-in-a-digital-and-intelligent-catering-service-system">Research on Consumer Behavior and Operational Management Strategies in a Digital and Intelligent Catering Service System</h4>
+<ul>
+<li><strong>Role</strong>: Data Analysis Lead</li>
+<li><strong>Level</strong>: National College Students&rsquo; Innovation and Entrepreneurship Training Program</li>
+<li><strong>Time</strong>: April 2024 - April 2026 (Expected)</li>
+<li><strong>Description</strong>: This project combines queuing economics with data science to explore consumer behavior patterns in the digital era, aiming to provide optimal operational strategies for catering service providers.</li>
+<li><strong>My Contributions</strong>:
+<ul>
+<li>Led the data analysis efforts, responsible for processing and analyzing nearly 10,000 initial transaction records.</li>
+<li>Utilized <code>Python</code> and <code>SQL</code> for data mining and employed <code>Tableau</code> for data visualization.</li>
+<li>Successfully identified 5 key consumer behavior patterns, providing a solid data foundation for the project&rsquo;s subsequent research.</li>
+</ul>
+</li>
+</ul>
+
+                </div>
+            
+             
+            
+
+
+
+
+<link href="https://xxx.xxx.com/dist/Artalk.css" rel="stylesheet" />
+<script src="https://xxx.xxx.com/dist/Artalk.js"></script>
+
+
+<div id="Comments"></div>
+
+<script>
+    Artalk.init({
+        el: '#Comments',
+        pageKey: 'https:\/\/zhaohuabing.com\/about\/',
+        pageTitle: '',
+        server: 'https:\/\/xxx.xxx.com',
+        site: 'xxx blog',
+    })
+</script>
+
+
+            
+            </div>
+            
+            
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+	
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            <a href="/about">
+               <img src="/img/yxq.png" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>天大智算24级网安本科在读，爱运动，爱学习，羽毛球乒乓球篮球足球台球麻将桌游剧本杀等等都是爱好嘿嘿</p>
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:3023209091@tju.edu.cn">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="/img/wechat.jpg">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/tju-yxq">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+            
+            
+               
+               
+               
+               
+                </ul>
+            </div>
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
+            
+            
+               
+            
+        </div>
+    </section>
+    
+
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
+            
+            <li><a target="_blank" href="http://www.never-ending.info/">小卷毛的博客</a></li>
+            
+        </ul>
+    </section>
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>LAST POSTS</h5>
+        <ul>
+        
+            <li><a href="/post/my-first-post/">计算机系统基础1 笔记1</a></li>
+        
+        </ul>
+    </section>
+    
+</div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:3023209091@tju.edu.cn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/tju-yxq">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="小段子的博客" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 小段子的博客 2025
+                    
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    
+    var $zh = document.querySelector(".zh");
+    var $en = document.querySelector(".en");
+    var $select = document.querySelector("select");
+
+    
+    function getLang() { return new URLSearchParams(document.location.search).get("lang") }
+
+    function setLang(newLang) {
+        var params = new URLSearchParams(document.location.search)
+        params.set("lang", newLang)
+        document.location.search = params.toString()  
+    }
+
+    
+    function _render() {
+        var lang = getLang()
+        
+        if (lang == "zh") {
+            $select.selectedIndex = 0;
+            $zh.style.display = "block";
+            $zh.classList.add("active");
+            $en.style.display = "none";
+            $en.classList.remove("active");
+            
+        } else {
+            $select.selectedIndex = 1;
+            $en.style.display = "block";
+            $en.classList.add("active");
+            $zh.style.display = "none";
+            $zh.classList.remove("active");
+        }
+        
+        generateCatalog(".catalog-body");
+    }
+
+    
+    function onLanChange(index) {
+        if (index == 0) {
+            lang = "zh"
+        } else {
+            lang = "en"
+        }
+        setLang(lang)
+    }
+
+    
+    _render();
+</script>
+
+
+
+
+</body>
+</html>

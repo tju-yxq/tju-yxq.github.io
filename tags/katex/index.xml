@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>KaTeX on Huabing Blog</title>
+    <link>http://localhost:1313/tags/katex/</link>
+    <description>Recent content in KaTeX on Huabing Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/katex/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Authoring mathematical formulae</title>
+      <link>http://localhost:1313/2025/07/06/mathematical-formulae/</link>
+      <pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/2025/07/06/mathematical-formulae/</guid>
+      <description>&lt;h2 id=&#34;authoring-mathematical-and-chemical-equations&#34;&gt;Authoring mathematical and chemical equations&lt;/h2&gt;&#xA;&lt;p&gt;Cleanwhite theme now has built-in &lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math xmlns=&#34;http://www.w3.org/1998/Math/MathML&#34;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mtext&gt;KaTeX&lt;/mtext&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;\KaTeX&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0.8988em;vertical-align:-0.2155em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord text&#34;&gt;&lt;span class=&#34;mord textrm&#34;&gt;K&lt;/span&gt;&lt;span class=&#34;mspace&#34; style=&#34;margin-right:-0.17em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;vlist-t&#34;&gt;&lt;span class=&#34;vlist-r&#34;&gt;&lt;span class=&#34;vlist&#34; style=&#34;height:0.6833em;&#34;&gt;&lt;span style=&#34;top:-2.905em;&#34;&gt;&lt;span class=&#34;pstrut&#34; style=&#34;height:2.7em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord&#34;&gt;&lt;span class=&#34;mord textrm mtight sizing reset-size6 size3&#34;&gt;A&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;mspace&#34; style=&#34;margin-right:-0.15em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord text&#34;&gt;&lt;span class=&#34;mord textrm&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;mspace&#34; style=&#34;margin-right:-0.1667em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;vlist-t vlist-t2&#34;&gt;&lt;span class=&#34;vlist-r&#34;&gt;&lt;span class=&#34;vlist&#34; style=&#34;height:0.4678em;&#34;&gt;&lt;span style=&#34;top:-2.7845em;&#34;&gt;&lt;span class=&#34;pstrut&#34; style=&#34;height:3em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord&#34;&gt;&lt;span class=&#34;mord textrm&#34;&gt;E&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;vlist-s&#34;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;vlist-r&#34;&gt;&lt;span class=&#34;vlist&#34; style=&#34;height:0.2155em;&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;mspace&#34; style=&#34;margin-right:-0.125em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord textrm&#34;&gt;X&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt; support, so that you can easily include&#xA;complex mathematical formulae into your web page, either inline or centred&#xA;on its own line. The theme uses Hugo&amp;rsquo;s embedded instance of the KaTeX&#xA;display engine to render mathematical markup to HTML at build time.&#xA;With this server side rendering of formulae, the same output is produced,&#xA;regardless of your browser or your environment.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

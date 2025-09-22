@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Huabing Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/2018-05-06-cryptocurrency_week1/bitcoin_header.jpg">
+    <meta property="twitter:image" content="/img/2018-05-06-cryptocurrency_week1/bitcoin_header.jpg" />
+    
+
+    
+    <meta name="title" content="使用Algolia为Gitpage博客提供站内搜索" />
+    <meta property="og:title" content="使用Algolia为Gitpage博客提供站内搜索" />
+    <meta property="twitter:title" content="使用Algolia为Gitpage博客提供站内搜索" />
+    
+
+    
+    <meta name="description" content="赵化冰，程序员, 开源爱好者，生活探险家 | 这里是 赵化冰 的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="赵化冰，程序员, 开源爱好者，生活探险家 | 这里是 赵化冰 的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="赵化冰，程序员, 开源爱好者，生活探险家 | 这里是 赵化冰 的博客，与你一起发现更大的世界。" />
+    
+
+    <meta property="og:url" content="http://localhost:1313/2018/05/21/algolia-integration-with-jekyll/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="赵化冰, zhaohuabing, Zhaohuabing, , 赵化冰的网络日志, 赵化冰的博客, Zhaohuabing Blog, 博客, 个人网站, 互联网, Web, 云原生, PaaS, Istio, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>使用Algolia为Gitpage博客提供站内搜索 | 赵化冰的博客 | Zhaohuabing Blog</title>
+
+    <link rel="canonical" href="/2018/05/21/algolia-integration-with-jekyll/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Huabing Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/life/">life</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech/">tech</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tips/">tips</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive//">ARCHIVE</a></li>
+                    
+                        <li><a href="/notes//">NOTES</a></li>
+                    
+                        <li><a href="/about//">ABOUT</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/2018-05-06-cryptocurrency_week1/bitcoin_header.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/jekyllq" title="Jekyll:q">
+                            Jekyll:q
+                        </a>
+                        
+                        <a class="tag" href="/tags/bitcoin" title="Bitcoin">
+                            Bitcoin
+                        </a>
+                        
+                    </div>
+                    <h1>使用Algolia为Gitpage博客提供站内搜索</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                赵化冰
+                             
+                            on 
+                            Monday, May 21, 2018
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <blockquote>
+<p>This series of articles are my notes of &ldquo;Bitcoin and Cryptocurrency Technologies&rdquo; online course.</p></blockquote>
+<h2 id="table-of-content">Table of Content</h2>
+<p>{:.no_toc}</p>
+<ul>
+<li>Table of Content
+{:toc}</li>
+</ul>
+<h2 id="scrooge-coin-transaction">Scrooge Coin Transaction</h2>
+<p>Scrooge Coin programming assignment is a little bit tricky, the video of this lesson hasn&rsquo;t explained some implementation details. To help you understand the transaction data structure used in Scrooge Coin, I draw this diagram:
+
+  <img src="/img/2018-5-20-cryptocurrency_week1_scroogecoin/scroogecoin.png" alt="Scrooge Coin">
+
+</p>
+<p>Every transaction has a set of inputs and a set of outputs. An input in a transaction must use a hash pointer to refer to its corresponding output in the previous transaction, and it must be signed with the private key of the owner because the owner needs to prove he/she agrees to spend his/her coins.</p>
+<p>Every output is correlated to the public key of the receiver, which is his/her ScroogeCoin address.</p>
+<p>In the first transaction, we assume that Scrooge has created 10 coins and assigned them to himself, we don&rsquo;t doubt that because the system-Scroogecoin has a building rule which says that Scrooge has right to create coins.</p>
+<p>In the second transaction,  Scrooge transferred 3.9 coins to Alice and 5.9 coins to Bob. The sum of the two outputs is 0.2 less than the input because the transaction fee was 0.2 coin.</p>
+<p>In the third transaction,  there were two inputs and one output, Alice and Bob transferred 9.7 coins to mike, and the transaction fee was 0.1 coin.</p>
+<h2 id="unclaimed-transaction-outputs-pool">Unclaimed transaction outputs pool</h2>
+<p>Another trick we need to Note when doing the programming assignment is that an UTXOPool is introduced to track the unclaimed outputs (unspent coins), so we can know whether the corresponding output of an input of the transaction is available or not.</p>
+<h2 id="txhandler-java-code">TxHandler Java Code</h2>
+<pre tabindex="0"><code>import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class TxHandler {
+	private UTXOPool utxoPool;
+
+	/**
+	 * Creates a public ledger whose current UTXOPool (collection of unspent
+	 * transaction outputs) is {@code utxoPool}. This should make a copy of utxoPool
+	 * by using the UTXOPool(UTXOPool uPool) constructor.
+	 */
+	public TxHandler(UTXOPool utxoPool) {
+		this.utxoPool = new UTXOPool(utxoPool);
+	}
+
+	/**
+	 * @return true if: (1) all outputs claimed by {@code tx} are in the current
+	 *         UTXO pool, (2) the signatures on each input of {@code tx} are valid,
+	 *         (3) no UTXO is claimed multiple times by {@code tx}, (4) all of
+	 *         {@code tx}s output values are non-negative, and (5) the sum of
+	 *         {@code tx}s input values is greater than or equal to the sum of its
+	 *         output values; and false otherwise.
+	 */
+	public boolean isValidTx(Transaction tx) {
+		Set&lt;UTXO&gt; claimedUTXO = new HashSet&lt;UTXO&gt;();
+		double inputSum = 0;
+		double outputSum = 0;
+
+		List&lt;Transaction.Input&gt; inputs = tx.getInputs();
+		for (int i = 0; i &lt; inputs.size(); i++) {
+			Transaction.Input input = inputs.get(i);
+
+			if (!isConsumedCoinAvailable(input)) {
+				return false;
+			}
+
+			if (!verifySignatureOfConsumeCoin(tx, i, input)) {
+				return false;
+			}
+
+			if (isCoinConsumedMultipleTimes(claimedUTXO, input)) {
+				return false;
+			}
+
+			UTXO utxo = new UTXO(input.prevTxHash, input.outputIndex);
+			Transaction.Output correspondingOutput = utxoPool.getTxOutput(utxo);
+			inputSum += correspondingOutput.value;
+
+		}
+
+		List&lt;Transaction.Output&gt; outputs = tx.getOutputs();
+		for (int i = 0; i &lt; outputs.size(); i++) {
+			Transaction.Output output = outputs.get(i);
+			if (output.value &lt;= 0) {
+				return false;
+			}
+
+			outputSum += output.value;
+		}
+
+		// Should the input value and output value be equal? Otherwise the ledger will
+		// become unbalanced.
+		// The difference between inputSum and outputSum is the transaction fee
+		if (outputSum &gt; inputSum) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isCoinConsumedMultipleTimes(Set&lt;UTXO&gt; claimedUTXO, Transaction.Input input) {
+		UTXO utxo = new UTXO(input.prevTxHash, input.outputIndex);
+		return !claimedUTXO.add(utxo);
+	}
+
+	private boolean verifySignatureOfConsumeCoin(Transaction tx, int index, Transaction.Input input) {
+		UTXO utxo = new UTXO(input.prevTxHash, input.outputIndex);
+		Transaction.Output correspondingOutput = utxoPool.getTxOutput(utxo);
+		PublicKey pk = correspondingOutput.address;
+		return Crypto.verifySignature(pk, tx.getRawDataToSign(index), input.signature);
+	}
+
+	private boolean isConsumedCoinAvailable(Transaction.Input input) {
+		UTXO utxo = new UTXO(input.prevTxHash, input.outputIndex);
+		return utxoPool.contains(utxo);
+	}
+
+	/**
+	 * Handles each epoch by receiving an unordered array of proposed transactions,
+	 * checking each transaction for correctness, returning a mutually valid array
+	 * of accepted transactions, and updating the current UTXO pool as appropriate.
+	 */
+	public Transaction[] handleTxs(Transaction[] possibleTxs) {
+		List&lt;Transaction&gt; acceptedTx = new ArrayList&lt;Transaction&gt;();
+		for (int i = 0; i &lt; possibleTxs.length; i++) {
+			Transaction tx = possibleTxs[i];
+			if (isValidTx(tx)) {
+				acceptedTx.add(tx);
+
+				removeConsumedCoinsFromPool(tx);
+				addCreatedCoinsToPool(tx);
+			}
+		}
+
+		Transaction[] result = new Transaction[acceptedTx.size()];
+		acceptedTx.toArray(result);
+		return result;
+	}
+
+	private void addCreatedCoinsToPool(Transaction tx) {
+		List&lt;Transaction.Output&gt; outputs = tx.getOutputs();
+		for (int j = 0; j &lt; outputs.size(); j++) {
+			Transaction.Output output = outputs.get(j);
+			UTXO utxo = new UTXO(tx.getHash(), j);
+			utxoPool.addUTXO(utxo, output);
+		}
+	}
+
+	private void removeConsumedCoinsFromPool(Transaction tx) {
+		List&lt;Transaction.Input&gt; inputs = tx.getInputs();
+		for (int j = 0; j &lt; inputs.size(); j++) {
+			Transaction.Input input = inputs.get(j);
+			UTXO utxo = new UTXO(input.prevTxHash, input.outputIndex);
+			utxoPool.removeUTXO(utxo);
+		}
+	}
+
+}
+</code></pre><h2 id="all-the-example-codes-on-github">All the Example Codes on GitHub</h2>
+<p>I wrap the codes into a maven project, just run <code>mvn test</code> then the example codes will build and run all the test cases.</p>
+<p><a href="https://github.com/zhaohuabing/scroogecoin">Scrooge Coin example in Java</a></p>
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://localhost:1313/"><img src="/img/favicon.png" />Huabing Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/05/01/may-day-jiulonghu/" data-toggle="tooltip" data-placement="top" title="川西秘境探险">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/05/23/istio-auto-injection-with-webhook/" data-toggle="tooltip" data-placement="top" title="Istio Sidecar自动注入原理">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+
+<link href="https://xxx.xxx.com/dist/Artalk.css" rel="stylesheet" />
+<script src="https://xxx.xxx.com/dist/Artalk.js"></script>
+
+
+<div id="Comments"></div>
+
+<script>
+    Artalk.init({
+        el: '#Comments',
+        pageKey: 'http:\/\/localhost:1313\/2018\/05\/21\/algolia-integration-with-jekyll\/',
+        pageTitle: '使用Algolia为Gitpage博客提供站内搜索',
+        server: 'https:\/\/xxx.xxx.com',
+        site: 'xxx blog',
+    })
+</script>
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/istio" title="istio">
+                            istio
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/microservice" title="microservice">
+                            microservice
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/security" title="security">
+                            security
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/service-mesh" title="service mesh">
+                            service mesh
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/tips" title="tips">
+                            tips
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="https://zhaozhihan.com">Linda的博客</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:youremail@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/your%20wechat%20qr%20code%20image">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/yourgithub">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yourlinkedinid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/yourstackoverflowid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Huabing Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Huabing Blog 2025
+                    
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>
