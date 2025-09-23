@@ -13,7 +13,7 @@
       <link>https://tju-yxq.github.io/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F2/</link>
       <pubDate>Tue, 23 Sep 2025 00:00:00 +0000</pubDate>
       <guid>https://tju-yxq.github.io/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F2/</guid>
-      <description>&lt;h3 id=&#34;信息的存储&#34;&gt;信息的存储&lt;/h3&gt;&#xA;&lt;h4 id=&#34;字长&#34;&gt;字长&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;计算机（CPU）一次整数运算能处理的位数&lt;/li&gt;&#xA;&lt;li&gt;示例：&#xA;&lt;ul&gt;&#xA;&lt;li&gt;32位系统：字长32&lt;/li&gt;&#xA;&lt;li&gt;64位系统：字长64&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;字节序&#34;&gt;字节序&lt;/h4&gt;&#xA;&lt;h5 id=&#34;小端序le---little-endian&#34;&gt;小端序（LE - Little Endian）&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;低位字节存储在低地址&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;示例（0x3039在32位系统的存储）：&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;信息的存储&#34;&gt;信息的存储&lt;/h2&gt;&#xA;&lt;h3 id=&#34;字长&#34;&gt;字长&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;计算机（CPU）一次整数运算能处理的位数&lt;/li&gt;&#xA;&lt;li&gt;示例：&#xA;&lt;ul&gt;&#xA;&lt;li&gt;32位系统：字长32&lt;/li&gt;&#xA;&lt;li&gt;64位系统：字长64&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;字节序&#34;&gt;字节序&lt;/h3&gt;&#xA;&lt;h4 id=&#34;小端序le---little-endian&#34;&gt;小端序（LE - Little Endian）&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;低位字节存储在低地址&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;示例（0x3039在32位系统的存储）：&lt;/p&gt;</description>
     </item>
     <item>
       <title>计算机系统基础1 笔记1</title>
