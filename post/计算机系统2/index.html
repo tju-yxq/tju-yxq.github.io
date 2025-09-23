@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="小段子的博客">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="计算机系统基础1 笔记2" />
+    <meta property="og:title" content="计算机系统基础1 笔记2" />
+    <meta property="twitter:title" content="计算机系统基础1 笔记2" />
+    
+
+    
+    <meta name="description" content="小段子，天大智算在读本科生, | 这里是 小段子 的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="小段子，天大智算在读本科生, | 这里是 小段子 的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="小段子，天大智算在读本科生, | 这里是 小段子 的博客，与你一起发现更大的世界。" />
+    
+
+    <meta property="og:url" content="https://tju-yxq.github.io/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F2/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="小段子，网安">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>计算机系统基础1 笔记2 | 小段子的博客 | xdz&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F2/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小段子的博客</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/">计算机系统</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive//">ARCHIVE</a></li>
+                    
+                        <li><a href="/about//">关于</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F" title="计算机系统">
+                            计算机系统
+                        </a>
+                        
+                    </div>
+                    <h1>计算机系统基础1 笔记2</h1>
+                    <h2 class="subheading">信息的表示与处理</h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                     &#34;小段子&#34;
+                             
+                            on 
+                            Tuesday, September 23, 2025
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="信息的存储">信息的存储</h2>
+<h3 id="字长">字长</h3>
+<ul>
+<li>计算机（CPU）一次整数运算能处理的位数</li>
+<li>示例：
+<ul>
+<li>32位系统：字长32</li>
+<li>64位系统：字长64</li>
+</ul>
+</li>
+</ul>
+<h3 id="字节序">字节序</h3>
+<h4 id="小端序le---little-endian">小端序（LE - Little Endian）</h4>
+<ul>
+<li>
+<p>低位字节存储在低地址</p>
+</li>
+<li>
+<p>示例（0x3039在32位系统的存储）：</p>
+<pre tabindex="0"><code class="language-hex" data-lang="hex">39 30 00 00
+</code></pre></li>
+</ul>
+<h4 id="大端序be---big-endian">大端序（BE - Big Endian）</h4>
+<ul>
+<li>
+<p>高位字节存储在低地址</p>
+</li>
+<li>
+<p>示例（0x3039在32位系统的存储）：</p>
+<pre tabindex="0"><code class="language-hex" data-lang="hex">00 00 30 39
+</code></pre></li>
+</ul>
+<blockquote>
+<p>注意：指针指向1字节大小的内存，因此39、30作为两个整体存储</p></blockquote>
+<h3 id="指针的存储">指针的存储</h3>
+<ol>
+<li>不同编译器和计算机的指针可能分配到不同地址</li>
+<li>每次运行结果的指针都可能不同（安全考虑）</li>
+</ol>
+<hr>
+<h2 id="位运算逻辑运算">位运算、逻辑运算</h2>
+<h3 id="基本操作">基本操作</h3>
+<h4 id="位运算">位运算</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#bd93f9">0x0F</span> <span style="color:#ff79c6">&amp;</span> <span style="color:#bd93f9">0xF0</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0x00</span>;  <span style="color:#6272a4">// 按位与
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#bd93f9">0x0F</span> <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">0xF0</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0xFF</span>;  <span style="color:#6272a4">// 按位或
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#bd93f9">0x0F</span> <span style="color:#ff79c6">^</span> <span style="color:#bd93f9">0xFF</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0xF0</span>;  <span style="color:#6272a4">// 异或
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">~</span><span style="color:#bd93f9">0x00</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0xFF</span>;        <span style="color:#6272a4">// 取反
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#bd93f9">1</span> <span style="color:#ff79c6">&lt;&lt;</span> <span style="color:#bd93f9">3</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">8</span>;          <span style="color:#6272a4">// 左移（乘以8）
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">-</span><span style="color:#bd93f9">8</span> <span style="color:#ff79c6">&gt;&gt;</span> <span style="color:#bd93f9">2</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">-</span><span style="color:#bd93f9">2</span>;        <span style="color:#6272a4">// 算术右移（符号位填充）
+</span></span></span></code></pre></div><h4 id="逻辑运算">逻辑运算</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">&amp;&amp;</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>;  <span style="color:#6272a4">// 逻辑与
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">||</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;  <span style="color:#6272a4">// 逻辑或
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">!</span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;      <span style="color:#6272a4">// 逻辑非
+</span></span></span></code></pre></div><h3 id="高级操作">高级操作</h3>
+<p>
+  <img src="./1749269712849.png" alt="位掩码操作">
+
+
+
+  <img src="./1749269717855.png" alt="移位操作">
+
+
+
+  <img src="./1749269730127.png" alt="位操作技巧">
+
+</p>
+<blockquote>
+<p>建议结合LAB1复习（含典型例题）</p></blockquote>
+<hr>
+<h2 id="整数的表示">整数的表示</h2>
+<h3 id="无符号数">无符号数</h3>
+<ul>
+<li>定义：所有位表示数值，无符号位</li>
+<li>范围：$0$ 到 $2^w - 1$（w为位数）</li>
+<li>示例（8位）：0~255</li>
+</ul>
+<h3 id="有符号数补码表示">有符号数（补码表示）</h3>
+<ul>
+<li>定义：
+<ul>
+<li>最高位为符号位（权重为负）</li>
+<li>正数：补码=原码</li>
+<li>负数：非符号位取反后+1</li>
+</ul>
+</li>
+</ul>
+<h3 id="表示范围对比">表示范围对比</h3>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>范围（w位）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>无符号数</td>
+          <td>$0$ 到 $2^w - 1$</td>
+      </tr>
+      <tr>
+          <td>有符号数</td>
+          <td>$-2^{w-1}$ 到 $2^{w-1}-1$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>示例（w=8）</strong>：</p>
+<ul>
+<li>无符号：0~255</li>
+<li>有符号：-128~127</li>
+</ul>
+<h3 id="c语言混用问题">C语言混用问题</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8be9fd">int</span> a <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">unsigned</span> <span style="color:#8be9fd">int</span> b <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span>(a <span style="color:#ff79c6">&gt;</span> b) <span style="color:#6272a4">// 返回true（a被强制转换为无符号数0xFFFFFFFF）
+</span></span></span></code></pre></div><blockquote>
+<p>注意：有符号数与无符号数混用时，有符号数隐式转换为无符号数，可能导致逻辑错误</p></blockquote>
+<hr>
+<h2 id="整数的运算">整数的运算</h2>
+<h3 id="整数扩展">整数扩展</h3>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>规则</th>
+          <th>示例（8位→16位）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>无符号数</td>
+          <td>0扩展</td>
+          <td>0xFE → 0x00FE（254）</td>
+      </tr>
+      <tr>
+          <td>有符号数</td>
+          <td>符号位扩展</td>
+          <td>0xFE → 0xFFFE（-2）</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="整数截断">整数截断</h3>
+<ul>
+<li>规则：丢弃高w-k位，保留低k位</li>
+<li>示例：
+<ul>
+<li>16位→8位：0x1234 → 0x34（52）</li>
+<li>16位有符号：0x8000（-32768）→ 0x00（0）</li>
+</ul>
+</li>
+</ul>
+<h3 id="有符号数取反">有符号数取反</h3>
+<ul>
+<li>公式：$-x = \sim x + 1$</li>
+<li>原理：$x + \sim x = -1$</li>
+</ul>
+<h3 id="加法溢出检测">加法溢出检测</h3>
+<h4 id="无符号数-1">无符号数</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff79c6">if</span>(a <span style="color:#ff79c6">+</span> b <span style="color:#ff79c6">&lt;</span> a) <span style="color:#6272a4">// 发生溢出
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// 示例：200+200=144（8位）
+</span></span></span></code></pre></div><h4 id="有符号数">有符号数</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff79c6">if</span>((a<span style="color:#ff79c6">&gt;</span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">&amp;&amp;</span> b<span style="color:#ff79c6">&gt;</span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">&amp;&amp;</span> a<span style="color:#ff79c6">+</span>b<span style="color:#ff79c6">&lt;</span><span style="color:#bd93f9">0</span>) <span style="color:#ff79c6">||</span> 
+</span></span><span style="display:flex;"><span>   (a<span style="color:#ff79c6">&lt;</span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">&amp;&amp;</span> b<span style="color:#ff79c6">&lt;</span><span style="color:#bd93f9">0</span> <span style="color:#ff79c6">&amp;&amp;</span> a<span style="color:#ff79c6">+</span>b<span style="color:#ff79c6">&gt;</span><span style="color:#bd93f9">0</span>)) <span style="color:#6272a4">// 发生溢出
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// 示例：127+1=-128（8位）
+</span></span></span></code></pre></div><h3 id="乘法运算">乘法运算</h3>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>规则</th>
+          <th>示例（8位）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>无符号数</td>
+          <td>结果取模$2^w$</td>
+          <td>200×2=144（400%256）</td>
+      </tr>
+      <tr>
+          <td>有符号数</td>
+          <td>补码乘法，结果取模$2^w$</td>
+          <td>127×2=-2（254）</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>C语言不检查乘法溢出</p></blockquote>
+<h3 id="移位与乘除关系">移位与乘除关系</h3>
+<table>
+  <thead>
+      <tr>
+          <th>操作</th>
+          <th>等效运算</th>
+          <th>适用性</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>&lt;&lt; x</code></td>
+          <td>$×2^x$</td>
+          <td>无符号/有符号均适用</td>
+      </tr>
+      <tr>
+          <td><code>&gt;&gt; x</code></td>
+          <td>$÷2^x$</td>
+          <td>无符号数（逻辑右移）</td>
+      </tr>
+      <tr>
+          <td><code>&gt;&gt; x</code></td>
+          <td>$÷2^x$</td>
+          <td>有符号数（算术右移，负数有舍入问题）</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="浮点数">浮点数</h2>
+<h3 id="规格化数以float为例">规格化数（以float为例）</h3>
+<ul>
+<li>编码结构：
+<ul>
+<li>符号位（s）：1位</li>
+<li>阶码（exp）：8位</li>
+<li>尾数（frac）：23位</li>
+</ul>
+</li>
+<li>计算公式：
+$x = (-1)^s \times (1.\text{frac}) \times 2^{\text{exp}-127}$</li>
+<li>特性：指数越大，数值间隔越大（指数增长）</li>
+</ul>
+<p>
+  <img src="./1749282873010.png" alt="浮点数编码">
+
+</p>
+<h3 id="非规格化数">非规格化数</h3>
+<ul>
+<li>触发条件：exp = 000&hellip;0</li>
+<li>计算公式：
+$x = (-1)^s \times (0.\text{frac}) \times 2^{-126}$</li>
+<li>特殊值：
+<ul>
+<li>$\text{frac}=0, s=0$ → +0.0</li>
+<li>$\text{frac}=0, s=1$ → -0.0</li>
+</ul>
+</li>
+<li>特性：0附近等间距分布（间隔=$2^{-149}$）</li>
+</ul>
+<h3 id="特殊值">特殊值</h3>
+<table>
+  <thead>
+      <tr>
+          <th>exp</th>
+          <th>frac</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>全1</td>
+          <td>全0</td>
+          <td>±∞（溢出）</td>
+      </tr>
+      <tr>
+          <td>全1</td>
+          <td>非全0</td>
+          <td>NaN</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="浮点数分布">浮点数分布</h3>
+<p>
+  <img src="./1749291005378.png" alt="浮点数分布">
+
+</p>
+<h3 id="溢出类型">溢出类型</h3>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>上溢出</td>
+          <td>±∞（超出最大可表示值）</td>
+      </tr>
+      <tr>
+          <td>下溢出</td>
+          <td>0或逐步下溢</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="浮点数运算">浮点数运算</h2>
+<h3 id="c语言类型转换">C语言类型转换</h3>
+<table>
+  <thead>
+      <tr>
+          <th>转换方向</th>
+          <th>行为</th>
+          <th>示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>double→float</td>
+          <td>可能溢出/舍入</td>
+          <td>大值→±∞</td>
+      </tr>
+      <tr>
+          <td>float/double→int</td>
+          <td>向零舍入</td>
+          <td>1.999→1, -1.999→-1</td>
+      </tr>
+      <tr>
+          <td>int→float/double</td>
+          <td>精确转换（double精度更高）</td>
+          <td>保留精确值</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>历史教训：1996年Ariane5火箭因浮点数转整数错误导致爆炸（5亿美元损失）</p></blockquote>
+<h3 id="舍入规则">舍入规则</h3>
+<ul>
+<li>向偶数舍入（Round-to-even）</li>
+<li>LAB2提供详细实现</li>
+</ul>
+<blockquote>
+<p>浮点数运算不符合结合律/分配律：$(3.14+1e10)-1e10 \neq 3.14+(1e10-1e10)$</p></blockquote>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://tju-yxq.github.io/"><img src="/img/favicon.png" />小段子的博客</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F1/" data-toggle="tooltip" data-placement="top" title="计算机系统基础1 笔记1">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+<link href="https://xxx.xxx.com/dist/Artalk.css" rel="stylesheet" />
+<script src="https://xxx.xxx.com/dist/Artalk.js"></script>
+
+
+<div id="Comments"></div>
+
+<script>
+    Artalk.init({
+        el: '#Comments',
+        pageKey: 'https:\/\/tju-yxq.github.io\/post\/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F2\/',
+        pageTitle: '计算机系统基础1 笔记2',
+        server: 'https:\/\/xxx.xxx.com',
+        site: 'xxx blog',
+    })
+</script>
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F" title="计算机系统">
+                            计算机系统
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="http://www.never-ending.info/">小卷毛的博客</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:3023209091@tju.edu.cn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/tju-yxq">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="小段子的博客" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 小段子的博客 2025
+                    
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>
