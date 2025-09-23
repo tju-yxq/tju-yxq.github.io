@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on 小段子的技术博客</title>
+    <link>https://tju-yxq.github.io/tags/python/</link>
+    <description>Recent content in Python on 小段子的技术博客</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 31 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://tju-yxq.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>python与数据分析考试回忆版</title>
+      <link>https://tju-yxq.github.io/post/python%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 31 May 2025 00:00:00 +0000</pubDate>
+      <guid>https://tju-yxq.github.io/post/python%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</guid>
+      <description>&lt;h3 id=&#34;一选择题30分15道&#34;&gt;（一）选择题（30分,15道）&lt;/h3&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;大数据摩尔定律：人类社会数据&lt;strong&gt;每2年&lt;/strong&gt;就会翻一倍&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;python中的三目运算符：min=x if x&amp;lt;y else y&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;聚类算法：K-Means算法不能直接对文本数据使用&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;分类算法：KNN的一个距离，不确定是曼哈顿还是欧式距离&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

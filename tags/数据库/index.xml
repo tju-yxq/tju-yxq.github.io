@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据库 on 小段子的技术博客</title>
+    <link>https://tju-yxq.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+    <description>Recent content in 数据库 on 小段子的技术博客</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 03 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://tju-yxq.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数据库系统概论考试回忆版</title>
+      <link>https://tju-yxq.github.io/post/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://tju-yxq.github.io/post/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/</guid>
+      <description>&lt;h2 id=&#34;一填空题10道&#34;&gt;一、填空题（10道）&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;21年的六道填空题都考到了&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&#xD;&#xA;  &lt;img src=&#34;./image-20250603130313054.png&#34; alt=&#34;image-20250603130313054&#34;&gt;&#xD;&#xA;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;删表的语句是drop,删数据的语句是delete&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;二简答题&#34;&gt;二、简答题&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;恢复：关于具有检查点的恢复技术&lt;/li&gt;&#xA;&lt;li&gt;并发控制&lt;/li&gt;&#xA;&lt;li&gt;关系模式&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;三程序设计题&#34;&gt;三、程序设计题&lt;/h2&gt;&#xA;&lt;p&gt;和21年的题一样，只是有细微的修改&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

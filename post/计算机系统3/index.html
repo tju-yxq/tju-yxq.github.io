@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="小段子的技术博客">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="计算机系统基础1 笔记3" />
+    <meta property="og:title" content="计算机系统基础1 笔记3" />
+    <meta property="twitter:title" content="计算机系统基础1 笔记3" />
+    
+
+    
+    <meta name="description" content="x86_64汇编语言">
+    <meta property="og:description" content="x86_64汇编语言" />
+    <meta property="twitter:description" content="x86_64汇编语言" />
+    
+
+    <meta property="og:url" content="https://tju-yxq.github.io/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F3/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="小段子，网安">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>计算机系统基础1 笔记3 | &#39;小段子的技术博客</title>
+
+    <link rel="canonical" href="/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F3/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小段子的技术博客</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/%E8%80%83%E8%AF%95%E5%9B%9E%E5%BF%86/">考试回忆</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/">计算机系统</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive//">ARCHIVE</a></li>
+                    
+                        <li><a href="/about//">关于</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F" title="计算机系统">
+                            计算机系统
+                        </a>
+                        
+                    </div>
+                    <h1>计算机系统基础1 笔记3</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                     &#34;小段子&#34;
+                             
+                            on 
+                            Saturday, July 12, 2025
+                            
+                                <span id="/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F3/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("8vBpvo2x0aLuw1dB2caKAjRh-gzGzoHsz", "rCqpqIoolBWW1FwfRdk0bkkV");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="汇编指令格式">汇编指令格式</h2>
+<p>[label :] [opcode] [operand 1] [,oprand 2]
+标号 操作码 操作数1</p>
+<h3 id="操作数类型">操作数类型</h3>
+<ul>
+<li><strong>立即数（整数常量）</strong>
+<ul>
+<li>例 <code>$0x400</code>, <code>$-533</code></li>
+</ul>
+</li>
+<li><strong>寄存器</strong>
+<ul>
+<li>例如：
+<ul>
+<li><code>%rax</code>, <code>%r13</code></li>
+<li><code>(%rsp 作栈指针)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>存储器</strong>
+<ul>
+<li>地址指向的连续的8个字节</li>
+<li>例：
+<ul>
+<li><code>(%rax)</code> 表示调用rax存储的地址对应的内存</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据传送指令">数据传送指令</h2>
+<h3 id="mov">mov</h3>
+<h4 id="操作码后缀">操作码后缀</h4>
+<table>
+  <thead>
+      <tr>
+          <th>C语言类型声明</th>
+          <th>数据类型</th>
+          <th>后缀</th>
+          <th>大小</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>char</td>
+          <td>Byte</td>
+          <td>b</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>short</td>
+          <td>Word</td>
+          <td>w</td>
+          <td>2</td>
+      </tr>
+      <tr>
+          <td>int</td>
+          <td>Double Word</td>
+          <td>l</td>
+          <td>4</td>
+      </tr>
+      <tr>
+          <td>long</td>
+          <td>Quad Word</td>
+          <td>q</td>
+          <td>8</td>
+      </tr>
+      <tr>
+          <td>char*</td>
+          <td>Quad Word</td>
+          <td>q</td>
+          <td>8</td>
+      </tr>
+      <tr>
+          <td>float</td>
+          <td>Single precision</td>
+          <td>s</td>
+          <td>4</td>
+      </tr>
+      <tr>
+          <td>double</td>
+          <td>Double precision</td>
+          <td>l</td>
+          <td>8</td>
+      </tr>
+  </tbody>
+</table>
+<p>还有一些特别的组合后缀（z表示0扩展，s表示符号位扩展）
+  <img src="image/%e7%ac%ac%e4%b8%89%e7%ab%a0%e7%a8%8b%e5%ba%8f%e7%9a%84%e6%9c%ba%e5%99%a8%e7%ba%a7%e8%a1%a8%e7%a4%ba/1749304851955.png" alt="1749304851955">
+
+
+  <img src="image/%e7%ac%ac%e4%b8%89%e7%ab%a0%e7%a8%8b%e5%ba%8f%e7%9a%84%e6%9c%ba%e5%99%a8%e7%ba%a7%e8%a1%a8%e7%a4%ba/1749304862371.png" alt="1749304862371">
+
+</p>
+<ul>
+<li><code>MOV S,D</code> 即 <code>S-&gt;D</code></li>
+<li>例：
+<ul>
+<li><code>movq %rdi ,%rax</code> 表示把rdi中的数复制到rax里</li>
+</ul>
+</li>
+</ul>
+<p>特别情况（我感觉不会考啊）
+  <img src="image/%e7%ac%ac%e4%b8%89%e7%ab%a0%e7%a8%8b%e5%ba%8f%e7%9a%84%e6%9c%ba%e5%99%a8%e7%ba%a7%e8%a1%a8%e7%a4%ba/1749305079220.png" alt="1749305079220">
+
+</p>
+<ul>
+<li>如果把位数低的数x传入到原本8字节都填充的寄存器中：
+<ul>
+<li><code>if (x位数 == 32) {寄存器高32位会清零}</code></li>
+<li><code>if (x位数 != 32) {只覆盖自己长度的数值，对于高位的不覆盖}</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="存储器寻址方式">存储器寻址方式</h3>
+<ul>
+<li><strong>间接寻址</strong>（和c中指针作用相同）
+<ul>
+<li><code>(Rb)</code>
+例：<code>(%rax)</code> 取rax存储的地址指向的内存</li>
+</ul>
+</li>
+<li><strong>基地址+偏移量</strong>
+<ul>
+<li><code>D(Rb)</code>
+例：<code>8(%rax)</code></li>
+</ul>
+</li>
+<li><strong>变址寻址</strong>
+<ul>
+<li><code>D(Rb,Ri)</code>
+例：<code>8(%rdi,rsi)</code> → <code>8 + rdi + rsi</code></li>
+</ul>
+</li>
+<li><strong>比例变址寻址</strong>
+<ul>
+<li><code>D(Rb,Ri,s)</code>
+例：<code>8(%rax,%rdx,4)</code> → <code>8 + rax + rdx * 4</code></li>
+</ul>
+</li>
+</ul>
+<p>结合下图食用：
+
+  <img src="./1749304477171-1758624338481-4.png" alt="1749304477171">
+
+
+
+  <img src="./1749304506925.png" alt="1749304506925">
+
+</p>
+<h2 id="栈指令">栈指令</h2>
+<h3 id="pushq-s">pushq S</h3>
+<p>将S入栈（效果如下）：
+subq $8,%rsp // 栈指针向下移动8字节
+movq S,(%rsp) // 将S的数值丢入指针所指空间</p>
+<h3 id="popq-d">popq D</h3>
+<p>将8字节（四字）出栈：</p>
+<h2 id="算数和逻辑操作">算数和逻辑操作</h2>
+<h3 id="地址计算指令">地址计算指令</h3>
+<h4 id="leaload-effective-address">lea（load effective address）</h4>
+<ul>
+<li><strong>形式</strong>：<code>lea src dst</code>
+<ul>
+<li><code>src</code>：是寻址模式的表达式</li>
+<li><code>dst</code>：目的地</li>
+</ul>
+</li>
+<li><strong>用途</strong>：计算地址（不用引用内存数值）
+如图：
+
+  <img src="./1749352131803.png" alt="1749352131803">
+
+
+（用c的话来说就是mov解引用，而lea不)</li>
+</ul>
+<h3 id="单操作数指令">单操作数指令</h3>
+<table>
+  <thead>
+      <tr>
+          <th>指令</th>
+          <th>效果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>incq Dest</code></td>
+          <td><code>Dest = Dest + 1</code></td>
+      </tr>
+      <tr>
+          <td><code>decq Dest</code></td>
+          <td><code>Dest = Dest - 1</code></td>
+      </tr>
+      <tr>
+          <td><code>negq Dest</code></td>
+          <td><code>Dest = -Dest</code></td>
+      </tr>
+      <tr>
+          <td><code>notq Dest</code></td>
+          <td><code>Dest = ~Dest</code></td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="双操作数指令">双操作数指令</h3>
+<p>
+  <img src="./1749352973136.png" alt="1749352973136">
+
+
+<em>(逻辑右移(logical)不考虑符号位，算数右移(arithmetic)考虑符号位)</em></p>
+<h2 id="控制">控制</h2>
+<h3 id="前情提要">前情提要</h3>
+<ul>
+<li>除了整数寄存器，CPU还维护一组单个位的<strong>条件码寄存器</strong>，描述最近算术或逻辑操作的属性</li>
+<li><strong>特别注明</strong>：
+<ul>
+<li><code>lea</code>操作不会改变任何条件码（用于地址计算）</li>
+<li>双操作指令会改变条件码</li>
+<li>对于逻辑操作：进位标志和溢出标志设置为0</li>
+<li>对于移位操作：进位标志设置为最后一个被移出的位，溢出标志为0</li>
+<li><code>INC</code>和 <code>DEC</code>：设置溢出和零标志，不改变进位标志</li>
+</ul>
+</li>
+</ul>
+<h3 id="常用条件码">常用条件码</h3>
+<table>
+  <thead>
+      <tr>
+          <th>标志</th>
+          <th>描述</th>
+          <th>C等效检查</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CF</td>
+          <td>最近操作使最高位产生进位</td>
+          <td><code>(unsigned)t &lt; (unsigned)a</code></td>
+      </tr>
+      <tr>
+          <td>ZF</td>
+          <td>最近操作结果为0</td>
+          <td><code>t == 0</code></td>
+      </tr>
+      <tr>
+          <td>SF</td>
+          <td>最近操作结果为负数</td>
+          <td><code>t &lt; 0</code></td>
+      </tr>
+      <tr>
+          <td>OF</td>
+          <td>最近操作导致补码溢出</td>
+          <td>`(a&lt;0&amp;&amp;b&lt;0&amp;&amp;!t&lt;0)</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="修改条件码">修改条件码</h3>
+<h4 id="寄存器比较指令-cmp">寄存器比较指令 cmp</h4>
+<ul>
+<li><strong>格式</strong>：<code>cmp src2 src1</code>
+类似 <code>sub</code>，执行 <code>src1 - src2</code>但不改变目标操作数
+
+  <img src="./1749354916226.png" alt="1749354916226">
+
+
+（被置位=设置为1)</li>
+</ul>
+<h4 id="位比较指令-test">位比较指令 test</h4>
+<ul>
+<li>类似 <code>and</code>，只设置条件码，不改变目标操作数</li>
+<li><strong>格式</strong>：<code>test src2 src1</code>
+  <img src="./1749355023913.png" alt="1749355023913">
+
+</li>
+<li><strong>用途</strong>：
+<ul>
+<li>测试寄存器值：<code>testq %rax,%rax</code>（检查%rax是负/零/正）</li>
+<li>测试特定位：一个操作数是掩码</li>
+</ul>
+</li>
+</ul>
+<h3 id="访问指令码读取条件码">访问指令码(读取条件码)</h3>
+<h4 id="setx">setX</h4>
+<p>
+  <img src="./1749366153762.png" alt="1749366153762">
+
+</p>
+<h3 id="if-else的汇编实现">if else的汇编实现</h3>
+<h4 id="跳转指令-jx">跳转指令 jX</h4>
+<p>
+  <img src="./1749366641156.png" alt="1749366641156">
+
+</p>
+<ul>
+<li>
+<p><strong>jmp讲解</strong>：</p>
+<ul>
+<li>直接跳转：<code>jmp Label</code>
+  <img src="./1749366708059.png" alt="1749366708059">
+
+</li>
+<li>间接跳转：
+<ul>
+<li><code>jmp *%rax</code> → 跳到 <code>%rax</code>存储的代码</li>
+<li><code>jmp *(%rax)</code> → 跳到 <code>%rax</code>存储地址指向的代码</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>PC相对编码</strong>：</p>
+<ul>
+<li>机器码将目标指令地址与下条指令地址的差作为编码
+  <img src="./1749367539878.png" alt="1749367539878">
+
+
+  <img src="./1749367559200.png" alt="1749367559200">
+
+
+  <img src="./1749367934550.png" alt="1749367934550">
+
+</li>
+<li><strong>补充</strong>：<code>rep</code>和 <code>repz</code>是空操作，用于优化AMD处理器分支预测</li>
+</ul>
+</li>
+</ul>
+<h4 id="if-else汇编示例">if-else汇编示例</h4>
+<ul>
+<li>
+<p><strong>C正常版本</strong>：
+  <img src="./1749369423182.png" alt="1749369423182">
+
+</p>
+</li>
+<li>
+<p><strong>goto版本</strong>：
+  <img src="./1749369433012.png" alt="1749369433012">
+
+</p>
+</li>
+<li>
+<p><strong>汇编版本</strong>：</p>
+<p>
+  <img src="./1749369449692-1758624453817-20-1758624459536-22.png" alt="1749369449692">
+
+</p>
+</li>
+</ul>
+<h4 id="条件数据传输指令-cmovx">条件数据传输指令 cmovX</h4>
+<p>
+  <img src="./1749370757205.png" alt="1749370757205">
+
+</p>
+<ul>
+<li><strong>代码示例</strong>：
+<ul>
+<li>C代码：<code>v = test-expr ? then-expr : else-expr;</code></li>
+<li>汇编逻辑（C表示）：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>v <span style="color:#ff79c6">=</span> then<span style="color:#ff79c6">-</span>expr;
+</span></span><span style="display:flex;"><span>ve <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">else</span><span style="color:#ff79c6">-</span>expr;
+</span></span><span style="display:flex;"><span>t <span style="color:#ff79c6">=</span> test<span style="color:#ff79c6">-</span>expr;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> (<span style="color:#ff79c6">!</span>t) v <span style="color:#ff79c6">=</span> ve;
+</span></span></code></pre></div></li>
+</ul>
+</li>
+<li><strong>问题情况</strong>：
+  <img src="./1749371402808.png" alt="1749371402808">
+
+</li>
+<li><strong>优势</strong>：避免跳转，提高流水线效率</li>
+<li><strong>局限性</strong>：源操作数可为寄存器/内存，目的操作数必须为寄存器</li>
+</ul>
+<h4 id="控制转移-vs-数据传送效率">控制转移 vs 数据传送效率</h4>
+<p>
+  <img src="./1749370250165.png" alt="1749370250165">
+
+</p>
+<h3 id="循环的汇编实现">循环的汇编实现</h3>
+<h4 id="do_while">do_while</h4>
+<ul>
+<li><strong>通用形式</strong>：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff79c6">do</span> 
+</span></span><span style="display:flex;"><span>    body<span style="color:#ff79c6">-</span>statement 
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">while</span> (test<span style="color:#ff79c6">-</span>expr);
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">-</span> <span style="color:#ff79c6">**</span>goto表述<span style="color:#ff79c6">**</span>：
+</span></span><span style="display:flex;"><span>```c
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">loop</span>:
+</span></span><span style="display:flex;"><span>    body<span style="color:#ff79c6">-</span>statement
+</span></span><span style="display:flex;"><span>    t <span style="color:#ff79c6">=</span> test<span style="color:#ff79c6">-</span>expr;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (t) <span style="color:#ff79c6">goto</span> loop;
+</span></span></code></pre></div></li>
+<li><strong>示例</strong>：
+
+  <img src="./1749373399658.png" alt="1749373399658">
+
+
+
+  <img src="./1749373410420.png" alt="1749373410420">
+
+</li>
+</ul>
+<h4 id="while">while</h4>
+<ul>
+<li>
+<p><strong>翻译方法1 (jump to middle)</strong>：</p>
+<ul>
+<li><strong>goto代码</strong>：
+  <img src="./1749373802228.png" alt="1749373802228">
+
+</li>
+<li><strong>示例</strong>：
+
+  <img src="./1749373863188.png" alt="1749373863188">
+
+
+
+  <img src="./1749373875021.png" alt="1749373875021">
+
+</li>
+</ul>
+</li>
+<li>
+<p><strong>翻译方法2 (guarded-do)</strong>：</p>
+<ul>
+<li><strong>goto代码</strong>：
+  <img src="./1749374093756.png" alt="1749374093756">
+
+</li>
+<li><strong>示例</strong>：
+
+  <img src="./1749374192494.png" alt="1749374192494">
+
+
+
+  <img src="./1749374262376.png" alt="1749374262376">
+
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="for">for</h4>
+<ul>
+<li>原理同while（前面加初始化）</li>
+</ul>
+<h3 id="switch的汇编实现">switch的汇编实现</h3>
+<ul>
+<li><strong>C版本</strong>：
+  <img src="./1749375021705.png" alt="1749375021705">
+
+</li>
+<li><strong>goto版本</strong>：
+  <img src="./1749375035381.png" alt="1749375035381">
+
+</li>
+<li><strong>跳转表生成</strong>：
+<ul>
+<li>确定n取值范围</li>
+<li>列出所有可能case（如 <code>n==100</code>→<code>*jt[0]=&amp;&amp;loc_A</code>）</li>
+</ul>
+</li>
+<li><strong>汇编实现</strong>：
+<ul>
+<li><strong>跳转表</strong>：
+  <img src="./1749375912189.png" alt="1749375912189">
+
+</li>
+<li><strong>本体</strong>：
+
+  <img src="./1749375920005.png" alt="1749375920005">
+
+</li>
+</ul>
+</li>
+<li><strong>优势</strong>：执行时间与case数量无关</li>
+<li><strong>退化</strong>：当case稀疏时退化为if-else</li>
+</ul>
+<h2 id="过程">过程</h2>
+<h3 id="栈">栈</h3>
+<ul>
+<li><strong>栈顶地址</strong>：<code>%rsp</code></li>
+<li><strong>生长方向</strong>：高地址→低地址</li>
+<li><strong>栈帧写真</strong>：
+
+  <img src="./1749384862384.png" alt="1749384862384">
+
+</li>
+</ul>
+<h3 id="过程调用与返回">过程调用与返回</h3>
+<h4 id="转移控制">转移控制</h4>
+<ul>
+<li><strong>程序计数器</strong>：<code>%rip</code></li>
+<li><strong>过程调用指令 call</strong>：
+<ul>
+<li>格式：<code>call label</code></li>
+<li>效果：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#50fa7b">pushq</span> (next_instruction_address)  <span style="color:#6272a4">// 压入返回地址
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#50fa7b">jmp</span> label                         <span style="color:#6272a4">// 跳转目标地址
+</span></span></span></code></pre></div></li>
+</ul>
+</li>
+<li><strong>返回指令 ret</strong>：
+<ul>
+<li>等效：<code>popq %rip</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="数据传送">数据传送</h4>
+<ul>
+<li><strong>参数传递</strong>：
+<ul>
+<li>前6个参数用寄存器：
+  <img src="./1749386558997.png" alt="1749386558997">
+
+</li>
+<li>第7+个参数用栈：
+
+  <img src="./1749386640044.png" alt="1749386640044">
+
+</li>
+</ul>
+</li>
+<li><strong>返回值</strong>：<code>%rax</code></li>
+</ul>
+<h4 id="内存管理栈帧">内存管理（栈帧）</h4>
+<ul>
+<li><strong>栈帧组成</strong>：
+<ul>
+<li>返回地址（call压入）</li>
+<li>保存的基地址（<code>push %rbp; mov %rbp,%rsp</code>）</li>
+<li>函数参数</li>
+<li>局部变量</li>
+<li>保存的寄存器</li>
+</ul>
+</li>
+<li><strong>寄存器使用惯例</strong>：| 类型         | 寄存器                  | 保存责任       |
+| &mdash;&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;&mdash;&mdash;&ndash; |
+| Callee-saved | <code>%rbx,%rbp,%r12-%r15</code> | 被调用函数保存 |
+| Caller-saved | 其他（除 <code>%rsp</code>）     | 调用函数保存   |</li>
+<li><strong>栈帧示例</strong>：
+<pre tabindex="0"><code>高地址
++------------------+
+| 调用者参数       | &lt;--- 调用者栈帧
++------------------+
+| 返回地址         | &lt;--- call压入
++------------------+
+| 保存的rbp        | &lt;--- %rbp指向此处
++------------------+
+| 局部变量         |
++------------------+
+| 保存的寄存器     |
++------------------+ &lt;--- %rsp指向此处
+低地址
+</code></pre></li>
+<li><strong>完整示例</strong>：
+
+  <img src="./1749390823453.png" alt="1749390823453">
+
+
+
+  <img src="./1749390865692.png" alt="1749390865692">
+
+</li>
+</ul>
+<h4 id="递归实现">递归实现</h4>
+<ul>
+<li>
+<p><strong>原理</strong>：每个调用拥有私有栈帧</p>
+</li>
+<li>
+<p><strong>示例</strong>：
+  <img src="./1749392378750.png" alt="1749392378750">
+
+
+  <img src="./1749392394246.png" alt="1749392394246">
+
+</p>
+</li>
+<li>
+<p><strong>例题</strong>：
+
+  <img src="./1749393112447.png" alt="1749393112447">
+
+
+<strong>答案</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff79c6">if</span> (x <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>) <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">unsigned</span> <span style="color:#8be9fd">long</span> nx <span style="color:#ff79c6">=</span> x <span style="color:#ff79c6">&gt;&gt;</span> <span style="color:#bd93f9">2</span>;
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">long</span> rv <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">rfun</span>(nx);
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">return</span> rv <span style="color:#ff79c6">+</span> x;
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="数组">数组</h2>
+<h3 id="一维数组">一维数组</h3>
+<ul>
+<li><strong>寻址</strong>：基址 + 索引 × 元素大小
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#50fa7b">movl</span> (<span style="color:#8be9fd;font-style:italic">%rdi</span>, <span style="color:#8be9fd;font-style:italic">%rsi</span>, <span style="color:#bd93f9">4</span>), <span style="color:#8be9fd;font-style:italic">%eax</span>  <span style="color:#6272a4">// eax = arr[rsi]
+</span></span></span></code></pre></div></li>
+<li><strong>示意图</strong>：
+
+  <img src="./1749393800483.png" alt="1749393800483">
+
+</li>
+</ul>
+<h3 id="高维数组嵌套数组">高维数组（嵌套数组）</h3>
+<ul>
+<li><strong>存储原则</strong>：行优先</li>
+<li><strong>地址计算</strong>：<code>A[i][j]地址 = 基址 + (i * cols + j) * 元素大小</code></li>
+<li><strong>示意图</strong>：
+
+  <img src="./1749393850696.png" alt="1749393850696">
+
+</li>
+</ul>
+<h3 id="多层数组指针数组">多层数组（指针数组）</h3>
+<ul>
+<li><strong>与高维数组区别</strong>：
+<ul>
+<li>元素是指针（指向独立数组）</li>
+<li>内部数组长度可不一致</li>
+</ul>
+</li>
+<li><strong>示例</strong>：
+
+  <img src="./1749394227154.png" alt="1749394227154">
+
+
+
+  <img src="./1749394233714.png" alt="1749394233714">
+
+</li>
+</ul>
+<h3 id="结构体">结构体</h3>
+<ul>
+<li><strong>内存布局</strong>：成员按声明顺序存储（含对齐填充）</li>
+<li><strong>字节对齐规则</strong>：
+<ul>
+<li>char(1), short(2), int(4), long/指针(8)</li>
+<li>结构体对齐 = 成员最大对齐要求的整数倍</li>
+</ul>
+</li>
+<li><strong>示例</strong>：
+  <img src="./1749394672918.png" alt="1749394672918">
+
+
+  <img src="./1749394752044.png" alt="1749394752044">
+
+</li>
+<li><strong>对齐原因</strong>：内存以4/8字节为单位访问</li>
+</ul>
+<h3 id="联合体">联合体</h3>
+<ul>
+<li>所有成员共享内存（大小=最大成员）
+
+  <img src="./1749394966756.png" alt="1749394966756">
+
+</li>
+</ul>
+<h3 id="内存布局总览">内存布局总览</h3>
+<p>
+  <img src="./1749395079022.png" alt="1749395079022">
+
+</p>
+<h3 id="缓冲区溢出">缓冲区溢出</h3>
+<h4 id="产生原因">产生原因</h4>
+<ul>
+<li>边界检查缺失（如栈字符数组越界）</li>
+<li>不安全库函数：<code>gets()</code>, <code>strcpy()</code>, <code>scanf()</code>等</li>
+</ul>
+<h4 id="攻击类型">攻击类型</h4>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>机制</th>
+          <th>特点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CI</td>
+          <td>覆盖返回地址指向恶意代码</td>
+          <td>需注入代码到栈</td>
+      </tr>
+      <tr>
+          <td>ROP</td>
+          <td>链式调用已有代码片段(gadgets)</td>
+          <td>绕过不可执行栈(NX)保护</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="防御措施">防御措施</h4>
+<ul>
+<li><strong>栈随机化</strong>：随机变化栈基址</li>
+<li><strong>栈破坏检测</strong>：插入/检查金丝雀值</li>
+<li><strong>限制可执行区域</strong>：标记栈为不可执行(NX)</li>
+</ul>
+<pre tabindex="0"><code></code></pre>
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://tju-yxq.github.io/"><img src="/img/favicon.png" />小段子的技术博客</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F2/" data-toggle="tooltip" data-placement="top" title="计算机系统基础1 笔记2">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F5/" data-toggle="tooltip" data-placement="top" title="计算机系统基础1 笔记5">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+<script src="https://giscus.app/client.js"
+        data-repo="tju-yxq/yxq-blog-source"
+        data-repo-id="R_kgDOP0dLgw"
+        data-category="Comments"
+        data-category-id="DIC_kwDOP0dLg84CvygP"
+        data-mapping="pathname"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-theme="light_high_contrast"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+
+
+
+<link href="https://xxx.xxx.com/dist/Artalk.css" rel="stylesheet" />
+<script src="https://xxx.xxx.com/dist/Artalk.js"></script>
+
+
+<div id="Comments"></div>
+
+<script>
+    Artalk.init({
+        el: '#Comments',
+        pageKey: 'https:\/\/tju-yxq.github.io\/post\/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F3\/',
+        pageTitle: '计算机系统基础1 笔记3',
+        server: 'https:\/\/xxx.xxx.com',
+        site: 'xxx blog',
+    })
+</script>
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F" title="计算机系统">
+                            计算机系统
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="http://www.never-ending.info/">小卷毛的博客</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:3023209091@tju.edu.cn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/tju-yxq">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="小段子的技术博客" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 小段子的技术博客 2025
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>
