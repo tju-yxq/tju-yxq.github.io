@@ -202,10 +202,14 @@
 
 
 
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script src="https://unpkg.com/leancloud-storage@latest/dist/av-min.js"></script>
 
 <script>
-	AV.initialize("SGnXibnQUAvlDjZEiN4zXw6n-MdYXbMMI", "Nn1F9pN6lBgHmcRjwgaD4A0g");
+	AV.init({
+		appId: "SGnXibnQUAvlDjZEiN4zXw6n-MdYXbMMI",
+		appKey: "Nn1F9pN6lBgHmcRjwgaD4A0g",
+		serverURL: "https://sgxibnqu.api.lncldglobal.com"
+	});
 </script>
 
 <script type="text/javascript">
@@ -220,14 +224,9 @@ function showTime(Counter) {
 
     query.containedIn('url', entries);
     query.find()
-        .done(function(results) {
+        .then(function(results) {
             var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
             var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
-
-            
-            
-            
-            
 
             for (var i = 0; i < results.length; i++) {
                 var item = results[i];
@@ -237,6 +236,7 @@ function showTime(Counter) {
 
                 $(element).find(COUNT_CONTAINER_REF).text(time);
             }
+            
             for (var i = 0; i < entries.length; i++) {
                 var url = entries[i];
                 var element = document.getElementById(url);
@@ -251,8 +251,10 @@ function showTime(Counter) {
                 }
             }
         })
-        .fail(function(object, error) {
+        .catch(function(error) {
             console.log("Error: " + error.code + " " + error.message);
+            
+            $visitors.find('.leancloud-visitors-count').text('0');
         });
 }
 
@@ -263,21 +265,19 @@ function addCount(Counter) {
     var query = new AV.Query(Counter);
 
     query.equalTo("url", url);
-    query.find({
-        success: function(results) {
+    query.find()
+        .then(function(results) {
             if (results.length > 0) {
                 var counter = results[0];
-                counter.fetchWhenSave(true);
                 counter.increment("time");
-                counter.save(null, {
-                    success: function(counter) {
+                counter.save()
+                    .then(function(counter) {
                         var $element = $(document.getElementById(url));
                         $element.find('.leancloud-visitors-count').text(counter.get('time'));
-                    },
-                    error: function(counter, error) {
+                    })
+                    .catch(function(error) {
                         console.log('Failed to save Visitor num, with error message: ' + error.message);
-                    }
-                });
+                    });
             } else {
                 var newcounter = new Counter();
                  
@@ -294,23 +294,27 @@ function addCount(Counter) {
                 if(oldCountSpan!=''){
                     newcounter.set("time", parseInt(oldCountSpan)+1);
                 }else{
- 	                    newcounter.set("time",  1);
+ 	                newcounter.set("time", 1);
                 }
-                newcounter.save(null, {
-                    success: function(newcounter) {
+                newcounter.save()
+                    .then(function(newcounter) {
                         var $element = $(document.getElementById(url));
                         $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-                    },
-                    error: function(newcounter, error) {
-                        console.log('Failed to create');
-                    }
-                });
+                    })
+                    .catch(function(error) {
+                        console.log('Failed to create new counter: ' + error.message);
+                        
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text('1');
+                    });
             }
-        },
-        error: function(error) {
+        })
+        .catch(function(error) {
             console.log('Error:' + error.code + " " + error.message);
-        }
-    });
+            
+            var $element = $(document.getElementById(url));
+            $element.find('.leancloud-visitors-count').text('1');
+        });
 }
 $(function() {
     var Counter = AV.Object.extend("Counter");
