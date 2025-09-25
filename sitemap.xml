@@ -2,13 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://tju-yxq.github.io/post/</loc>
-    <lastmod>2025-09-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tju-yxq.github.io/</loc>
-    <lastmod>2025-09-23T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://tju-yxq.github.io/categories/</loc>
+    <lastmod>2025-07-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tju-yxq.github.io/post/</loc>
     <lastmod>2025-07-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tju-yxq.github.io/tags/</loc>
@@ -21,6 +18,9 @@
     <lastmod>2025-07-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tju-yxq.github.io/tags/%E5%AD%A6%E7%94%9F%E5%B7%A5%E4%BD%9C%E8%BF%B0%E8%81%8C/</loc>
+    <lastmod>2025-07-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tju-yxq.github.io/</loc>
     <lastmod>2025-07-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tju-yxq.github.io/post/%E8%A5%BF%E6%96%B9%E6%96%87%E5%8C%96%E6%8E%A0%E5%BD%B1%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/</loc>
