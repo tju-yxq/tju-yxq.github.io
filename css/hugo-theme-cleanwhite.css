@@ -26,11 +26,11 @@
     font-size:15px
 }
 .sidebar-container h5{
-    color:gray;
+    color:black;
     padding-bottom:1em
 }
 .sidebar-container h5 a{
-    color:gray!important;
+    color:black!important;
     text-decoration:none
 }
 .sidebar-container a{
@@ -91,7 +91,7 @@ article{
     overflow:hidden;
 }
 blockquote{
-    color:gray;
+    color:black;
     font-style:italic;
     font-size:.95em;
     margin:20px 0 20px
@@ -150,7 +150,7 @@ pre code{
 .post-container h5{
     font-size:19px;
     font-weight:600;
-    color:gray
+    color:black
 }
 .post-container h5+p{
     margin-top:5px
@@ -158,7 +158,7 @@ pre code{
 .post-container h6{
     font-size:17px;
     font-weight:600;
-    color:gray
+    color:black
 }
 .post-container h6+p{
     margin-top:5px
@@ -489,7 +489,7 @@ pre code{
 }
 .post-preview>.post-meta>a, .post-preview>.post-meta{
     font-family:Lora,'Times New Roman',serif;
-    color:gray;
+    color:black;
     font-size:17px;
     font-style:italic;
     margin-top:0
@@ -658,7 +658,7 @@ form .row:first-child .floating-label-form-group{
     border:1px solid #0085a1
 }
 .pager .disabled>a,.pager .disabled>a:hover,.pager .disabled>a:focus,.pager .disabled>span{
-    color:gray;
+    color:black;
     background-color:#404040;
     cursor:not-allowed
 }
