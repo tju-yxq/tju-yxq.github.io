@@ -1,0 +1,184 @@
+/* 表格样式修复 - 确保所有表格都有边框 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0.8em auto;
+  width: auto;
+  max-width: 100%;
+  overflow-x: auto;
+  display: table;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd !important;
+  padding: 8px 12px !important;
+  line-height: 1.5;
+  text-align: left;
+  vertical-align: top;
+}
+
+table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  border: 1px solid #ccc !important;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* 响应式表格 */
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 14px;
+  }
+  
+  table th,
+  table td {
+    padding: 6px 8px !important;
+  }
+}
+
+/* 确保文章容器中的表格也应用样式 */
+.post-container table,
+.post-content table,
+article table {
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  margin: 0.8em auto !important;
+}
+
+.post-container table th,
+.post-container table td,
+.post-content table th,
+.post-content table td,
+article table th,
+article table td {
+  border: 1px solid #ddd !important;
+  padding: 8px 12px !important;
+}
+
+.post-container table th,
+.post-content table th,
+article table th {
+  background-color: #f5f5f5 !important;
+  font-weight: bold !important;
+  border: 1px solid #ccc !important;
+}
+
+/* KaTeX 数学公式样式优化 */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1em 0;
+  margin: 1em 0;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+/* 确保行内公式和块级公式都能正确显示 */
+.katex-display > .katex {
+  text-align: center;
+}
+
+/* 代码块中的数学公式 */
+pre.math-display {
+  overflow-x: auto;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+/* 表格中的数学公式样式 */
+table td .katex,
+table th .katex {
+  font-size: 1em;
+}
+
+table td .katex-display,
+table th .katex-display {
+  margin: 0.5em 0;
+  padding: 0;
+}
+
+/* 确保表格中的公式不会导致单元格过宽 */
+table td {
+  overflow-x: auto;
+}
+
+/* 表格内容垂直居中对齐(如果需要) */
+table th,
+table td {
+  vertical-align: middle;
+}
+
+/* 调整文章段落间距和行距 */
+.post-container p {
+  margin-top: 0.3em !important;
+  margin-bottom: 0.3em !important;
+  line-height: 1.6 !important;
+}
+
+.post-container ul,
+.post-container ol {
+  margin-top: 0.3em !important;
+  margin-bottom: 0.3em !important;
+  line-height: 1.6 !important;
+}
+
+.post-container li {
+  margin-bottom: 0.2em !important;
+}
+
+.post-container h1,
+.post-container h2,
+.post-container h3,
+.post-container h4,
+.post-container h5,
+.post-container h6 {
+  margin-top: 1em !important;
+  margin-bottom: 0.4em !important;
+}
+
+/* 文章内容整体行距 */
+.post-content,
+.post-container {
+  line-height: 1.6 !important;
+}
+
+/* 表格前后的段落间距优化 */
+.post-container table + p,
+.post-container p + table {
+  margin-top: 0.3em !important;
+}
+
+/* 标题前后的段落间距优化 */
+.post-container h1 + p,
+.post-container h2 + p,
+.post-container h3 + p,
+.post-container h4 + p,
+.post-container h5 + p,
+.post-container h6 + p {
+  margin-top: 0.2em !important;
+}
+
+/* 列表和表格之间的间距 */
+.post-container ul + table,
+.post-container ol + table,
+.post-container table + ul,
+.post-container table + ol {
+  margin-top: 0.3em !important;
+  margin-bottom: 0.3em !important;
+}
+
+/* 强调文本后的段落 */
+.post-container strong + br,
+.post-container em + br {
+  display: none;
+}
