@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="小段子的技术博客">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://tju-yxq.github.io//img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="https://tju-yxq.github.io//img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="" />
+    <meta property="og:title" content="" />
+    <meta property="twitter:title" content="" />
+    
+
+    
+    <meta name="description" content="小段子，天大智算在读本科生 | 这里是小段子的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="小段子，天大智算在读本科生 | 这里是小段子的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="小段子，天大智算在读本科生 | 这里是小段子的博客，与你一起发现更大的世界。" />
+    
+
+    <meta property="og:url" content="https://tju-yxq.github.io/tags/%E7%A7%91%E7%A0%94/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="小段子，网安">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>科研 | 小段子的技术博客</title>
+
+    <link rel="canonical" href="/tags/%E7%A7%91%E7%A0%94/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小段子的技术博客</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/">复习资料</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%AD%A6%E7%94%9F%E5%B7%A5%E4%BD%9C/">学生工作</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%A7%91%E7%A0%94/">科研</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E8%80%83%E8%AF%95%E5%9B%9E%E5%BF%86/">考试回忆</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive//">ARCHIVE</a></li>
+                    
+                        <li><a href="/about//">关于</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<header class="intro-header" style="background-image: url('/img/home-bg-jeep.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>小段子的技术博客 </h1>
+                    
+		    <span class="subheading">流水不争先，争的是涓涓细流</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+  
+<div data-pagefind-ignore="all" class="container">
+    <div class="row">
+        
+        
+   	    <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container
+        ">
+            
+<div data-pagefind-ignore="all">
+
+<div class="post-preview">
+    <a href="https://tju-yxq.github.io/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/">
+        <h2 class="post-title">
+            MMDiT计算负载和访存分析
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            MMDiT详细过程
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by      &#34;小段子&#34; on Saturday, November 1, 2025
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+</div>
+
+            
+
+
+
+       	</div>
+        
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+	
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            <a href="/about">
+               <img src="/img/yxq.jpg" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>天大智算24级网安本科在读，爱运动，爱学习，羽毛球乒乓球篮球足球台球麻将桌游剧本杀等等都是爱好嘿嘿</p>
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:3023209091@tju.edu.cn">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="/img/wechat.jpg">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/tju-yxq">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+            
+            
+               
+               
+               
+               
+                </ul>
+            </div>
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
+            
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+        </div>
+    </section>
+    
+
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
+            
+            <li><a target="_blank" href="http://www.never-ending.info/">小卷毛的博客</a></li>
+            
+        </ul>
+    </section>
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>LAST POSTS</h5>
+        <ul>
+        
+            <li><a href="/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/">MMDiT计算负载和访存分析</a></li>
+        
+            <li><a href="/post/%E5%8B%A4%E5%B7%A5%E5%8A%A9%E5%AD%A6%E5%9F%BA%E5%9C%B0%E8%B4%9F%E8%B4%A3%E4%BA%BA%E8%81%8C%E8%B4%A3/">勤工助学基地负责人职责</a></li>
+        
+            <li><a href="/post/%E8%A5%BF%E6%96%B9%E6%96%87%E5%8C%96%E6%8E%A0%E5%BD%B1%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/">《西方文化掠影》复习资料</a></li>
+        
+            <li><a href="/post/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/">数据库系统概论考试回忆版</a></li>
+        
+            <li><a href="/post/python%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">python与数据分析考试回忆版</a></li>
+        
+        </ul>
+    </section>
+    
+</div>
+
+	</div>
+</div>
+
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:3023209091@tju.edu.cn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/tju-yxq">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='/tags/%E7%A7%91%E7%A0%94/index.xml' rel="alternate" type="application/rss+xml" title="小段子的技术博客" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 小段子的技术博客 2025
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+<style>
+   
+   
+  :root {
+    --ai-chat-primary: #007bff;
+    --ai-chat-bg: #ffffff;
+    --ai-chat-text: #212529;
+    --ai-chat-user-msg-bg: #007bff;
+    --ai-chat-user-msg-text: #ffffff;
+    --ai-chat-bot-msg-bg: #f8f9fa;
+    --ai-chat-bot-msg-text: #212529;
+    --ai-chat-border: #dee2e6;
+  }
+
+  #ai-chat-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--ai-chat-primary);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+    z-index: 9998;
+  }
+  #ai-chat-button:hover {
+    transform: scale(1.1);
+  }
+
+  #ai-chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 90%;
+    max-width: 400px;
+    height: 70vh;
+    max-height: 600px;
+    background-color: var(--ai-chat-bg);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 9999;
+  }
+  #ai-chat-window.active {
+    transform: scale(1);
+  }
+
+  #ai-chat-header {
+    background-color: var(--ai-chat-primary);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  #ai-chat-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  #ai-chat-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  #ai-chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-chat-message {
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    line-height: 1.4;
+  }
+  .ai-chat-message.user {
+    background-color: var(--ai-chat-user-msg-bg);
+    color: var(--ai-chat-user-msg-text);
+    align-self: flex-end;
+  }
+  .ai-chat-message.bot {
+    background-color: var(--ai-chat-bot-msg-bg);
+    color: var(--ai-chat-bot-msg-text);
+    align-self: flex-start;
+  }
+  .ai-chat-message.bot.loading {
+    display: flex;
+    align-items: center;
+  }
+  .ai-chat-message.bot.loading .dot {
+      width: 8px;
+      height: 8px;
+      margin: 0 2px;
+      background-color: #aaa;
+      border-radius: 50%;
+      display: inline-block;
+      animation: ai-chat-blink 1.4s infinite both;
+  }
+  .ai-chat-message.bot.loading .dot:nth-child(2) { animation-delay: 0.2s; }
+  .ai-chat-message.bot.loading .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes ai-chat-blink {
+      0% { opacity: 0.2; }
+      20% { opacity: 1; }
+      100% { opacity: 0.2; }
+  }
+
+   
+  .ai-chat-message.bot h1,
+  .ai-chat-message.bot h2,
+  .ai-chat-message.bot h3 {
+    margin: 0.5em 0 0.3em 0;
+    font-weight: bold;
+  }
+  .ai-chat-message.bot h1 { font-size: 1.2em; }
+  .ai-chat-message.bot h2 { font-size: 1.1em; }
+  .ai-chat-message.bot h3 { font-size: 1.05em; }
+  
+  .ai-chat-message.bot p {
+    margin: 0.3em 0;
+  }
+  
+  .ai-chat-message.bot code {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+  
+  .ai-chat-message.bot pre {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 0.5em 0;
+  }
+  
+  .ai-chat-message.bot pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  .ai-chat-message.bot ul,
+  .ai-chat-message.bot ol {
+    margin: 0.3em 0;
+    padding-left: 1.2em;
+  }
+  
+  .ai-chat-message.bot li {
+    margin: 0.1em 0;
+  }
+  
+  .ai-chat-message.bot a {
+    color: var(--ai-chat-primary);
+    text-decoration: none;
+  }
+  
+  .ai-chat-message.bot a:hover {
+    text-decoration: underline;
+  }
+  
+  .ai-chat-message.bot strong {
+    font-weight: bold;
+  }
+  
+  .ai-chat-message.bot em {
+    font-style: italic;
+  }
+
+
+  #ai-chat-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid var(--ai-chat-border);
+    flex-shrink: 0;
+  }
+  #ai-chat-input {
+    flex-grow: 1;
+    border: 1px solid var(--ai-chat-border);
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+  #ai-chat-input:focus {
+    outline: none;
+    border-color: var(--ai-chat-primary);
+  }
+  #ai-chat-form button {
+    background-color: var(--ai-chat-primary);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+</style>
+
+
+<button id="ai-chat-button">
+  <span>🤖</span>
+</button>
+
+<div id="ai-chat-window">
+  <div id="ai-chat-header">
+    <h3>AI 知识库助手</h3>
+    <button id="ai-chat-close-btn">&times;</button>
+  </div>
+  <div id="ai-chat-messages">
+    <div class="ai-chat-message bot">你好！我是基于本站文章的 AI 助手，有什么可以帮你的吗？</div>
+  </div>
+  <form id="ai-chat-form">
+    <input id="ai-chat-input" type="text" placeholder="输入你的问题..." autocomplete="off">
+    <button type="submit">→</button>
+  </form>
+</div>
+
+<script>
+
+
+(function() {
+  
+  
+  const API_BASE_URL = 'http:\/\/localhost:8000';
+
+  
+  const chatButton = document.getElementById('ai-chat-button');
+  const chatWindow = document.getElementById('ai-chat-window');
+  const closeBtn = document.getElementById('ai-chat-close-btn');
+  const chatForm = document.getElementById('ai-chat-form');
+  const chatInput = document.getElementById('ai-chat-input');
+  const messagesContainer = document.getElementById('ai-chat-messages');
+
+  
+  let chatHistory = []; 
+
+  
+  chatButton.addEventListener('click', () => toggleChatWindow());
+  closeBtn.addEventListener('click', () => toggleChatWindow(false));
+  chatForm.addEventListener('submit', handleFormSubmit);
+
+  function toggleChatWindow(forceOpen) {
+    if (forceOpen === true) {
+      chatWindow.classList.add('active');
+    } else if (forceOpen === false) {
+      chatWindow.classList.remove('active');
+    } else {
+      chatWindow.classList.toggle('active');
+    }
+  }
+
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    const question = chatInput.value.trim();
+    if (!question) return;
+
+    
+    addMessage(question, 'user');
+    chatInput.value = '';
+
+    
+    const loadingMessage = addMessage('', 'bot', true);
+    
+    try {
+      
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question,
+          chat_history: chatHistory.map(item => [item.human, item.ai])
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`服务器错误: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const answer = data.answer;
+
+      
+      updateBotMessage(loadingMessage, answer);
+
+      
+      chatHistory.push({ human: question, ai: answer });
+
+    } catch (error) {
+      console.error("AI Chat Error:", error);
+      let errorMessage = "抱歉，出现了错误。请稍后再试。";
+      
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        errorMessage = "无法连接到AI服务器，请检查网络连接或稍后再试。";
+      } else if (error.message.includes('服务器错误')) {
+        errorMessage = `服务器暂时不可用 (${error.message})`;
+      }
+      
+      updateBotMessage(loadingMessage, errorMessage);
+    }
+  }
+
+  function addMessage(text, type, isLoading = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('ai-chat-message', type);
+
+    if (isLoading) {
+      messageDiv.classList.add('loading');
+      messageDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+    } else {
+      
+      messageDiv.innerText = text;
+    }
+    
+    messagesContainer.appendChild(messageDiv);
+    scrollToBottom();
+    return messageDiv;
+  }
+
+  
+  function renderMarkdown(text) {
+    
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+    
+    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+
+    
+    html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    
+    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    
+    html = html.replace(/^[-*+] (.+)$/gm, 'TMPLI_START$1TMPLI_END');
+    
+    
+    html = html.replace(/^\d+\. (.+)$/gm, 'TMPOLI_START$1TMPOLI_END');
+    
+    
+    html = html.replace(/(TMPLI_START.*?TMPLI_END(\nTMPLI_START.*?TMPLI_END)*)/g, function(match) {
+      return '<ul>' + match.replace(/TMPLI_START/g, '<li>').replace(/TMPLI_END/g, '</li>') + '</ul>';
+    });
+    
+    html = html.replace(/(TMPOLI_START.*?TMPOLI_END(\nTMPOLI_START.*?TMPOLI_END)*)/g, function(match) {
+      return '<ol>' + match.replace(/TMPOLI_START/g, '<li>').replace(/TMPOLI_END/g, '</li>') + '</ol>';
+    });
+
+    
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+    
+    
+    if (html && !html.match(/^(<h[1-6]|<ul|<ol|<pre)/)) {
+      html = '<p>' + html + '</p>';
+    }
+
+    return html;
+  }
+
+  function updateBotMessage(messageDiv, newText) {
+    messageDiv.classList.remove('loading');
+    
+    const renderedHtml = renderMarkdown(newText);
+    messageDiv.innerHTML = renderedHtml;
+    scrollToBottom();
+  }
+
+  function scrollToBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="小段子的技术博客">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/home-bg-jeep.jpg">
+    <meta property="twitter:image" content="/img/home-bg-jeep.jpg" />
+    
+
+    
+    <meta name="title" content="MMDiT计算负载和访存分析" />
+    <meta property="og:title" content="MMDiT计算负载和访存分析" />
+    <meta property="twitter:title" content="MMDiT计算负载和访存分析" />
+    
+
+    
+    <meta name="description" content="MMDiT详细过程">
+    <meta property="og:description" content="MMDiT详细过程" />
+    <meta property="twitter:description" content="MMDiT详细过程" />
+    
+
+    <meta property="og:url" content="https://tju-yxq.github.io/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="小段子，网安">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>MMDiT计算负载和访存分析 | 小段子的技术博客</title>
+
+    <link rel="canonical" href="/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    <link rel="stylesheet" href="/css/katex.min.css" integrity="sha512-nleNesO1Jws3rjLtrng1p0TNp3NANubi8czxbzgrBWzNUcDfa37zRwmRNXoCZQeECqIsF0DqL&#43;a7zptCI8XBgg==" crossorigin="anonymous">
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">小段子的技术博客</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/">复习资料</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E5%AD%A6%E7%94%9F%E5%B7%A5%E4%BD%9C/">学生工作</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E7%A7%91%E7%A0%94/">科研</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E8%80%83%E8%AF%95%E5%9B%9E%E5%BF%86/">考试回忆</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive//">ARCHIVE</a></li>
+                    
+                        <li><a href="/about//">关于</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home-bg-jeep.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E7%A7%91%E7%A0%94" title="科研">
+                            科研
+                        </a>
+                        
+                    </div>
+                    <h1>MMDiT计算负载和访存分析</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                     &#34;小段子&#34;
+                             
+                            on 
+                            Saturday, November 1, 2025
+                            
+                                <span id="/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://unpkg.com/leancloud-storage@latest/dist/av-min.js"></script>
+
+<script>
+	AV.init({
+		appId: "SGnXibnQUAvlDjZEiN4zXw6n-MdYXbMMI",
+		appKey: "Nn1F9pN6lBgHmcRjwgaD4A0g",
+		serverURL: "https://sgxibnqu.api.lncldglobal.com"
+	});
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+    
+    console.log("Loading counts for URLs: ", entries);
+
+    query.containedIn('url', entries);
+    query.find()
+        .then(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+            
+            console.log("Found " + results.length + " existing counters");
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time') || 0;
+                var element = document.getElementById(url);
+
+                console.log("Setting count for " + url + ": " + time);
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            
+            
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    var defaultCount = 0;
+                    if(oldCountSpan!=''){
+                        defaultCount = parseInt(oldCountSpan);
+                    }
+                    console.log("No record found for " + url + ", setting default count: " + defaultCount);
+                    countSpan.text(defaultCount);
+                }
+            }
+        })
+        .catch(function(error) {
+            console.log("Error loading counts: " + error.code + " " + error.message);
+            if (error.code === 101) {
+                console.log("Counter table doesn't exist yet, showing default values");
+                
+                $visitors.find('.leancloud-visitors-count').text('0');
+            } else {
+                
+                console.log("Other error occurred, showing default values");
+                $visitors.find('.leancloud-visitors-count').text('0');
+            }
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+    
+    
+    console.log("Current URL: " + url);
+    console.log("Current Title: " + title);
+
+    query.equalTo("url", url);
+    query.find()
+        .then(function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                var currentTime = counter.get('time') || 0;
+                console.log("Current count: " + currentTime);
+                
+                
+                counter.set("time", currentTime + 1);
+                counter.save()
+                    .then(function(updatedCounter) {
+                        var newTime = updatedCounter.get('time');
+                        console.log("Updated count: " + newTime);
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newTime);
+                    })
+                    .catch(function(error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                        
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(currentTime + 1);
+                    });
+            } else {
+                console.log("Creating new counter for URL: " + url);
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                var initialCount = 1;
+                if(oldCountSpan!=''){
+                    initialCount = parseInt(oldCountSpan) + 1;
+                }
+                newcounter.set("time", initialCount);
+                newcounter.save()
+                    .then(function(savedCounter) {
+                        console.log("New counter created with count: " + savedCounter.get('time'));
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(savedCounter.get('time'));
+                    })
+                    .catch(function(error) {
+                        console.log('Failed to create new counter: ' + error.message);
+                        
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(initialCount);
+                    });
+            }
+        })
+        .catch(function(error) {
+            console.log('Error querying counter:' + error.code + " " + error.message);
+            if (error.code === 101) {
+                console.log("Counter table doesn't exist, creating first record");
+                
+                var newcounter = new Counter();
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                newcounter.set("time", 1);
+                newcounter.save()
+                    .then(function(savedCounter) {
+                        console.log("First counter record created successfully");
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(savedCounter.get('time'));
+                    })
+                    .catch(function(saveError) {
+                        console.log('Failed to create first counter record: ' + saveError.message);
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text('1');
+                    });
+            } else {
+                
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text('1');
+            }
+        });
+}
+
+function initializeCounter() {
+    var Counter = AV.Object.extend("Counter");
+    var testQuery = new AV.Query(Counter);
+    
+    return testQuery.limit(1).find()
+        .then(function(results) {
+            console.log("Counter table exists");
+            return Counter;
+        })
+        .catch(function(error) {
+            if (error.code === 101) {
+                console.log("Counter table doesn't exist, will be created automatically on first write");
+                return Counter;
+            }
+            throw error;
+        });
+}
+
+$(function() {
+    initializeCounter()
+        .then(function(Counter) {
+            
+            
+            if ($('.leancloud_visitors').length == 1) {
+                var url = $('.leancloud_visitors').attr('id').trim();
+                var sessionKey = 'visited_' + url;
+                
+                
+                if (!sessionStorage.getItem(sessionKey)) {
+                    console.log("New visit detected, incrementing counter");
+                    
+                    sessionStorage.setItem(sessionKey, 'true');
+                    addCount(Counter);
+                } else {
+                    console.log("Already counted this visit, just showing count");
+                    
+                    showTime(Counter);
+                }
+            } else {
+                showTime(Counter);
+            }
+        })
+        .catch(function(error) {
+            console.log("Error initializing counter: " + error.code + " " + error.message);
+            
+            $('.leancloud-visitors-count').text('1');
+        });
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="模型参数定义">模型参数定义</h2>
+<table>
+  <thead>
+      <tr>
+          <th>参数符号</th>
+          <th>含义</th>
+          <th>典型值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>B</td>
+          <td>Batch Size</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>L_img</td>
+          <td>图像序列长度</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>L_txt</td>
+          <td>文本序列长度</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>L</td>
+          <td>总序列长度 (L_txt + L_img)</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>D</td>
+          <td>Hidden Size (隐藏层维度)</td>
+          <td>3072</td>
+      </tr>
+      <tr>
+          <td>H</td>
+          <td>Number of Heads (注意力头数)</td>
+          <td>24</td>
+      </tr>
+      <tr>
+          <td>d</td>
+          <td>Head Dimension (D / H)</td>
+          <td>128</td>
+      </tr>
+      <tr>
+          <td>N_double</td>
+          <td>Double Stream Block 层数</td>
+          <td>19</td>
+      </tr>
+      <tr>
+          <td>N_single</td>
+          <td>Single Stream Block 层数</td>
+          <td>38</td>
+      </tr>
+      <tr>
+          <td>r_mlp</td>
+          <td>MLP Ratio</td>
+          <td>4.0</td>
+      </tr>
+      <tr>
+          <td>D_mlp</td>
+          <td>MLP Hidden Dimension (D × r_mlp)</td>
+          <td>12288</td>
+      </tr>
+      <tr>
+          <td>C_in</td>
+          <td>输入通道数</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>C_out</td>
+          <td>输出通道数</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>P</td>
+          <td>Patch Size</td>
+          <td>2</td>
+      </tr>
+      <tr>
+          <td>D_vec</td>
+          <td>Vector Input Dimension</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>D_ctx</td>
+          <td>Context Input Dimension</td>
+          <td>-</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="一输入预处理阶段-prepare_block_inputs">一、输入预处理阶段 (prepare_block_inputs)</h2>
+<h3 id="11-图像输入投影-img_in">1.1 图像输入投影 (img_in)</h3>
+<p><strong>操作</strong>: Linear(C_in, D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>图像输入投影</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times C_{in} \times D$</td>
+          <td>$B \times L_{img} \times (C_{in} + D) \times 4 + (C_{in} \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>:</p>
+<ul>
+<li>矩阵乘法: $(B \times L_{img}, C_{in}) \times (C_{in}, D) = (B \times L_{img}, D)$</li>
+<li>FLOPs = 2 × M × N × K (矩阵乘法公式,M=B×L_img, N=D, K=C_in)</li>
+<li>内存访问包括: 输入 + 输出 + 权重 + 偏置</li>
+</ul>
+<h3 id="12-条件输入投影-cond_in-可选">1.2 条件输入投影 (cond_in, 可选)</h3>
+<p><strong>操作</strong>: Linear(C_in + P², D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>条件输入投影</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times (C_{in} + P^2) \times D$</td>
+          <td>$B \times L_{img} \times (C_{in} + P^2 + D) \times 4 + ((C_{in} + P^2) \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="13-时间步嵌入-time_in">1.3 时间步嵌入 (time_in)</h3>
+<p><strong>操作</strong>: timestep_embedding → MLPEmbedder</p>
+<h4 id="131-timestep-embedding">1.3.1 Timestep Embedding</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Sinusoidal Embedding</td>
+          <td>Trigonometric</td>
+          <td>$B \times 256 \times 4$</td>
+          <td>$B \times 256 \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>:</p>
+<ul>
+<li>包括 cos、sin、exp 计算</li>
+<li>输出维度固定为 256</li>
+</ul>
+<h4 id="132-mlpembedder-time_in">1.3.2 MLPEmbedder (time_in)</h4>
+<p><strong>操作</strong>: Linear(256, D) → SiLU → Linear(D, D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MLP 第一层</td>
+          <td>Linear</td>
+          <td>$2 \times B \times 256 \times D$</td>
+          <td>$B \times (256 + D) \times 4 + (256 \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>SiLU 激活</td>
+          <td>Elementwise</td>
+          <td>$B \times D \times 3$</td>
+          <td>$B \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP 第二层</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times D$</td>
+          <td>$B \times (D + D) \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="14-向量输入投影-vector_in">1.4 向量输入投影 (vector_in)</h3>
+<p><strong>操作</strong>: MLPEmbedder(D_vec, D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MLP 第一层</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D_{vec} \times D$</td>
+          <td>$B \times (D_{vec} + D) \times 4 + (D_{vec} \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>SiLU 激活</td>
+          <td>Elementwise</td>
+          <td>$B \times D \times 3$</td>
+          <td>$B \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP 第二层</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times D$</td>
+          <td>$B \times (D + D) \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="15-引导强度嵌入-guidance_in-可选">1.5 引导强度嵌入 (guidance_in, 可选)</h3>
+<p><strong>操作</strong>: MLPEmbedder(256, D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Timestep Embedding</td>
+          <td>Trigonometric</td>
+          <td>$B \times 256 \times 4$</td>
+          <td>$B \times 256 \times 4$</td>
+      </tr>
+      <tr>
+          <td>MLP 第一层</td>
+          <td>Linear</td>
+          <td>$2 \times B \times 256 \times D$</td>
+          <td>$B \times (256 + D) \times 4 + (256 \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>SiLU 激活</td>
+          <td>Elementwise</td>
+          <td>$B \times D \times 3$</td>
+          <td>$B \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP 第二层</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times D$</td>
+          <td>$B \times (D + D) \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="16-文本输入投影-txt_in">1.6 文本输入投影 (txt_in)</h3>
+<p><strong>操作</strong>: Linear(D_ctx, D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>文本投影</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{txt} \times D_{ctx} \times D$</td>
+          <td>$B \times L_{txt} \times (D_{ctx} + D) \times 4 + (D_{ctx} \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="17-位置编码-pe_embedder">1.7 位置编码 (pe_embedder)</h3>
+<p><strong>操作</strong>: EmbedND 或 LigerEmbedND</p>
+<h4 id="171-标准-rope-embednd">1.7.1 标准 RoPE (EmbedND)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>RoPE 计算</td>
+          <td>Trigonometric + Rearrange</td>
+          <td>$B \times L \times d \times n_{axes} \times 8$</td>
+          <td>$B \times L \times d \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>:</p>
+<ul>
+<li>n_axes: 位置编码的轴数量 (通常为3: T, H, W)</li>
+<li>包含 cos、sin 和张量重排操作</li>
+</ul>
+<h4 id="172-liger-rope-ligerembednd">1.7.2 Liger RoPE (LigerEmbedND)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>RoPE 计算</td>
+          <td>Trigonometric</td>
+          <td>$B \times L \times d \times n_{axes} \times 6$</td>
+          <td>$B \times L \times d \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="二double-stream-block-n_double-层">二、Double Stream Block (N_double 层)</h2>
+<p>Double Stream Block 分别处理图像流和文本流,但共享位置编码。</p>
+<h3 id="21-modulation-img_mod-和-txt_mod">2.1 Modulation (img_mod 和 txt_mod)</h3>
+<p><strong>操作</strong>: SiLU → Linear(D, 6×D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SiLU 激活</td>
+          <td>Elementwise</td>
+          <td>$B \times D \times 3$</td>
+          <td>$B \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>Linear (img)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times 6D$</td>
+          <td>$B \times (D + 6D) \times 4 + (D \times 6D + 6D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Linear (txt)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times 6D$</td>
+          <td>$B \times (D + 6D) \times 4 + (D \times 6D + 6D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: 输出 6 个调制参数: shift₁, scale₁, gate₁, shift₂, scale₂, gate₂</p>
+<h3 id="22-图像流---注意力准备">2.2 图像流 - 注意力准备</h3>
+<h4 id="221-layernorm--modulation">2.2.1 LayerNorm + Modulation</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LayerNorm (img)</td>
+          <td>Normalization</td>
+          <td>$B \times L_{img} \times D \times 5$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Scale + Shift (img)</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{img} \times D \times 2$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="222-qkv-投影-fused-模式">2.2.2 QKV 投影 (Fused 模式)</h4>
+<p><strong>操作</strong>: Linear(D, 3×D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>QKV 投影 (img)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times D \times 3D$</td>
+          <td>$B \times L_{img} \times (D + 3D) \times 4 + (D \times 3D + 3D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Rearrange</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times L_{img} \times 3D \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="223-qkv-投影-非-fused-模式">2.2.3 QKV 投影 (非 Fused 模式)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Q 投影 (img)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times D \times D$</td>
+          <td>$B \times L_{img} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>K 投影 (img)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times D \times D$</td>
+          <td>$B \times L_{img} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>V 投影 (img)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times D \times D$</td>
+          <td>$B \times L_{img} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="224-qk-normalization">2.2.4 QK Normalization</h4>
+<p><strong>操作</strong>: RMSNorm (Fused)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Q Norm (img)</td>
+          <td>RMSNorm</td>
+          <td>$B \times H \times L_{img} \times d \times 4$</td>
+          <td>$B \times H \times L_{img} \times d \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>K Norm (img)</td>
+          <td>RMSNorm</td>
+          <td>$B \times H \times L_{img} \times d \times 4$</td>
+          <td>$B \times H \times L_{img} \times d \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: RMSNorm 包括平方、均值、rsqrt、缩放操作</p>
+<h3 id="23-文本流---注意力准备">2.3 文本流 - 注意力准备</h3>
+<h4 id="231-layernorm--modulation">2.3.1 LayerNorm + Modulation</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LayerNorm (txt)</td>
+          <td>Normalization</td>
+          <td>$B \times L_{txt} \times D \times 5$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Scale + Shift (txt)</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{txt} \times D \times 2$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="232-qkv-投影-fused-模式">2.3.2 QKV 投影 (Fused 模式)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>QKV 投影 (txt)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{txt} \times D \times 3D$</td>
+          <td>$B \times L_{txt} \times (D + 3D) \times 4 + (D \times 3D + 3D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Rearrange</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times L_{txt} \times 3D \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="233-qkv-投影-非-fused-模式">2.3.3 QKV 投影 (非 Fused 模式)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Q 投影 (txt)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{txt} \times D \times D$</td>
+          <td>$B \times L_{txt} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>K 投影 (txt)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{txt} \times D \times D$</td>
+          <td>$B \times L_{txt} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>V 投影 (txt)</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{txt} \times D \times D$</td>
+          <td>$B \times L_{txt} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="234-qk-normalization">2.3.4 QK Normalization</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Q Norm (txt)</td>
+          <td>RMSNorm</td>
+          <td>$B \times H \times L_{txt} \times d \times 4$</td>
+          <td>$B \times H \times L_{txt} \times d \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>K Norm (txt)</td>
+          <td>RMSNorm</td>
+          <td>$B \times H \times L_{txt} \times d \times 4$</td>
+          <td>$B \times H \times L_{txt} \times d \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="24-联合注意力计算">2.4 联合注意力计算</h3>
+<h4 id="241-拼接-qkv">2.4.1 拼接 QKV</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Concat Q</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times H \times L \times d \times 4$</td>
+      </tr>
+      <tr>
+          <td>Concat K</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times H \times L \times d \times 4$</td>
+      </tr>
+      <tr>
+          <td>Concat V</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times H \times L \times d \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: L = L_txt + L_img</p>
+<h4 id="242-rope-应用-标准模式">2.4.2 RoPE 应用 (标准模式)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Apply RoPE (Q)</td>
+          <td>Rotation</td>
+          <td>$B \times H \times L \times d \times 8$</td>
+          <td>$B \times H \times L \times d \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Apply RoPE (K)</td>
+          <td>Rotation</td>
+          <td>$B \times H \times L \times d \times 8$</td>
+          <td>$B \times H \times L \times d \times 4 \times 3$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: RoPE 应用涉及复数乘法和张量重塑</p>
+<h4 id="243-rope-应用-liger-模式">2.4.3 RoPE 应用 (Liger 模式)</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Liger RoPE (Q,K)</td>
+          <td>Rotation</td>
+          <td>$B \times H \times L \times d \times 6$</td>
+          <td>$B \times H \times L \times d \times 4 \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="244-flash-attention">2.4.4 Flash Attention</h4>
+<p><strong>操作</strong>: Scaled Dot-Product Attention (使用 Flash Attention 优化)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>QK^T</td>
+          <td>MatMul</td>
+          <td>$2 \times B \times H \times L \times L \times d$</td>
+          <td>IO 优化 (Flash Attention)</td>
+      </tr>
+      <tr>
+          <td>Softmax</td>
+          <td>Softmax</td>
+          <td>$B \times H \times L \times L \times 5$</td>
+          <td>IO 优化 (Flash Attention)</td>
+      </tr>
+      <tr>
+          <td>Attention × V</td>
+          <td>MatMul</td>
+          <td>$2 \times B \times H \times L \times L \times d$</td>
+          <td>IO 优化 (Flash Attention)</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Flash Attention 内存访问优化</strong>:</p>
+<ul>
+<li>理论上: $O(B \times H \times L^2 \times d)$</li>
+<li>Flash Attention: $O(B \times H \times L \times d)$ (通过分块计算降低 HBM 访问)</li>
+</ul>
+<h4 id="245-拆分注意力输出">2.4.5 拆分注意力输出</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Split Output</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times L \times D \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: 分离为 txt_attn (L_txt) 和 img_attn (L_img)</p>
+<h3 id="25-图像流---输出投影和-mlp">2.5 图像流 - 输出投影和 MLP</h3>
+<h4 id="251-注意力输出投影">2.5.1 注意力输出投影</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Proj (img)</td>
+          <td>Linear(D, D)</td>
+          <td>$2 \times B \times L_{img} \times D \times D$</td>
+          <td>$B \times L_{img} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Gate × Proj</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{img} \times D$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>残差连接</td>
+          <td>Add</td>
+          <td>$B \times L_{img} \times D$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="252-mlp-分支">2.5.2 MLP 分支</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LayerNorm</td>
+          <td>Normalization</td>
+          <td>$B \times L_{img} \times D \times 5$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Scale + Shift</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{img} \times D \times 2$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP Linear 1</td>
+          <td>Linear(D, D_mlp)</td>
+          <td>$2 \times B \times L_{img} \times D \times D_{mlp}$</td>
+          <td>$B \times L_{img} \times (D + D_{mlp}) \times 4 + (D \times D_{mlp} + D_{mlp}) \times 4$</td>
+      </tr>
+      <tr>
+          <td>GELU</td>
+          <td>Activation</td>
+          <td>$B \times L_{img} \times D_{mlp} \times 8$</td>
+          <td>$B \times L_{img} \times D_{mlp} \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP Linear 2</td>
+          <td>Linear(D_mlp, D)</td>
+          <td>$2 \times B \times L_{img} \times D_{mlp} \times D$</td>
+          <td>$B \times L_{img} \times (D_{mlp} + D) \times 4 + (D_{mlp} \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Gate × MLP</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{img} \times D$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>残差连接</td>
+          <td>Add</td>
+          <td>$B \times L_{img} \times D$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: GELU 近似需要 8 次浮点运算 (包括多项式逼近)</p>
+<h3 id="26-文本流---输出投影和-mlp">2.6 文本流 - 输出投影和 MLP</h3>
+<h4 id="261-注意力输出投影">2.6.1 注意力输出投影</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Proj (txt)</td>
+          <td>Linear(D, D)</td>
+          <td>$2 \times B \times L_{txt} \times D \times D$</td>
+          <td>$B \times L_{txt} \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Gate × Proj</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{txt} \times D$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>残差连接</td>
+          <td>Add</td>
+          <td>$B \times L_{txt} \times D$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="262-mlp-分支">2.6.2 MLP 分支</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LayerNorm</td>
+          <td>Normalization</td>
+          <td>$B \times L_{txt} \times D \times 5$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Scale + Shift</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{txt} \times D \times 2$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP Linear 1</td>
+          <td>Linear(D, D_mlp)</td>
+          <td>$2 \times B \times L_{txt} \times D \times D_{mlp}$</td>
+          <td>$B \times L_{txt} \times (D + D_{mlp}) \times 4 + (D \times D_{mlp} + D_{mlp}) \times 4$</td>
+      </tr>
+      <tr>
+          <td>GELU</td>
+          <td>Activation</td>
+          <td>$B \times L_{txt} \times D_{mlp} \times 8$</td>
+          <td>$B \times L_{txt} \times D_{mlp} \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>MLP Linear 2</td>
+          <td>Linear(D_mlp, D)</td>
+          <td>$2 \times B \times L_{txt} \times D_{mlp} \times D$</td>
+          <td>$B \times L_{txt} \times (D_{mlp} + D) \times 4 + (D_{mlp} \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Gate × MLP</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{txt} \times D$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>残差连接</td>
+          <td>Add</td>
+          <td>$B \times L_{txt} \times D$</td>
+          <td>$B \times L_{txt} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="27-double-stream-block-总计-单层">2.7 Double Stream Block 总计 (单层)</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>计算负载 (FLOPs)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>总计</strong></td>
+          <td>$\approx 2 \times B \times (L_{img} + L_{txt}) \times D \times (12D + 8D_{mlp} + H \times L)$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>简化公式</strong> (当 D_mlp = 4D, 忽略低阶项):
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>DoubleBlock</mtext></msub><mo>≈</mo><mn>2</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>L</mi><mo>×</mo><mi>D</mi><mo>×</mo><mo stretchy="false">(</mo><mn>44</mn><mi>D</mi><mo>+</mo><mi>H</mi><mo>×</mo><mi>L</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{DoubleBlock}} \approx 2 \times B \times L \times D \times (44D + H \times L)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">DoubleBlock</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">44</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mclose">)</span></span></span></span></span><hr>
+<h2 id="三single-stream-block-n_single-层">三、Single Stream Block (N_single 层)</h2>
+<p>Single Stream Block 处理拼接后的图像和文本序列。</p>
+<h3 id="31-modulation">3.1 Modulation</h3>
+<p><strong>操作</strong>: SiLU → Linear(D, 3×D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SiLU 激活</td>
+          <td>Elementwise</td>
+          <td>$B \times D \times 3$</td>
+          <td>$B \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>Linear</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times 3D$</td>
+          <td>$B \times (D + 3D) \times 4 + (D \times 3D + 3D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: 输出 3 个调制参数: shift, scale, gate</p>
+<h3 id="32-layernorm--modulation">3.2 LayerNorm + Modulation</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LayerNorm</td>
+          <td>Normalization</td>
+          <td>$B \times L \times D \times 5$</td>
+          <td>$B \times L \times D \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Scale + Shift</td>
+          <td>Elementwise</td>
+          <td>$B \times L \times D \times 2$</td>
+          <td>$B \times L \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="33-并行投影-fused-模式">3.3 并行投影 (Fused 模式)</h3>
+<p><strong>操作</strong>: Linear(D, 3×D + D_mlp)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>QKV + MLP 投影</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L \times D \times (3D + D_{mlp})$</td>
+          <td>$B \times L \times (D + 3D + D_{mlp}) \times 4 + (D \times (3D + D_{mlp}) + (3D + D_{mlp})) \times 4$</td>
+      </tr>
+      <tr>
+          <td>分离 QKV 和 MLP</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times L \times (3D + D_{mlp}) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Rearrange QKV</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times L \times 3D \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="34-并行投影-非-fused-模式">3.4 并行投影 (非 Fused 模式)</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Q 投影</td>
+          <td>Linear(D, D)</td>
+          <td>$2 \times B \times L \times D \times D$</td>
+          <td>$B \times L \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>K 投影</td>
+          <td>Linear(D, D)</td>
+          <td>$2 \times B \times L \times D \times D$</td>
+          <td>$B \times L \times 2D \times 4 + (D \times D + D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>V + MLP 投影</td>
+          <td>Linear(D, D + D_mlp)</td>
+          <td>$2 \times B \times L \times D \times (D + D_{mlp})$</td>
+          <td>$B \times L \times (D + D + D_{mlp}) \times 4 + (D \times (D + D_{mlp}) + (D + D_{mlp})) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="35-qk-normalization">3.5 QK Normalization</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Q Norm</td>
+          <td>RMSNorm</td>
+          <td>$B \times H \times L \times d \times 4$</td>
+          <td>$B \times H \times L \times d \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>K Norm</td>
+          <td>RMSNorm</td>
+          <td>$B \times H \times L \times d \times 4$</td>
+          <td>$B \times H \times L \times d \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="36-rope-应用">3.6 RoPE 应用</h3>
+<p><strong>同 Double Stream Block 2.4.2 或 2.4.3</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Apply RoPE (标准)</td>
+          <td>Rotation</td>
+          <td>$B \times H \times L \times d \times 16$</td>
+          <td>$B \times H \times L \times d \times 4 \times 6$</td>
+      </tr>
+      <tr>
+          <td>Apply RoPE (Liger)</td>
+          <td>Rotation</td>
+          <td>$B \times H \times L \times d \times 6$</td>
+          <td>$B \times H \times L \times d \times 4 \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="37-flash-attention">3.7 Flash Attention</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>QK^T</td>
+          <td>MatMul</td>
+          <td>$2 \times B \times H \times L \times L \times d$</td>
+          <td>IO 优化 (Flash Attention)</td>
+      </tr>
+      <tr>
+          <td>Softmax</td>
+          <td>Softmax</td>
+          <td>$B \times H \times L \times L \times 5$</td>
+          <td>IO 优化 (Flash Attention)</td>
+      </tr>
+      <tr>
+          <td>Attention × V</td>
+          <td>MatMul</td>
+          <td>$2 \times B \times H \times L \times L \times d$</td>
+          <td>IO 优化 (Flash Attention)</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="38-并行输出-mlp">3.8 并行输出 MLP</h3>
+<h4 id="381-mlp-激活">3.8.1 MLP 激活</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>GELU</td>
+          <td>Activation</td>
+          <td>$B \times L \times D_{mlp} \times 8$</td>
+          <td>$B \times L \times D_{mlp} \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="382-拼接和投影">3.8.2 拼接和投影</h4>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Concat</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times L \times (D + D_{mlp}) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Linear 2</td>
+          <td>Linear(D + D_mlp, D)</td>
+          <td>$2 \times B \times L \times (D + D_{mlp}) \times D$</td>
+          <td>$B \times L \times (D + D_{mlp} + D) \times 4 + ((D + D_{mlp}) \times D + D) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="39-输出处理">3.9 输出处理</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Gate × Output</td>
+          <td>Elementwise</td>
+          <td>$B \times L \times D$</td>
+          <td>$B \times L \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>残差连接</td>
+          <td>Add</td>
+          <td>$B \times L \times D$</td>
+          <td>$B \times L \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="310-single-stream-block-总计-单层">3.10 Single Stream Block 总计 (单层)</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>计算负载 (FLOPs)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>总计</strong></td>
+          <td>$\approx 2 \times B \times L \times D \times (7D + 5D_{mlp} + H \times L)$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>简化公式</strong> (当 D_mlp = 4D):
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>SingleBlock</mtext></msub><mo>≈</mo><mn>2</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>L</mi><mo>×</mo><mi>D</mi><mo>×</mo><mo stretchy="false">(</mo><mn>27</mn><mi>D</mi><mo>+</mo><mi>H</mi><mo>×</mo><mi>L</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{SingleBlock}} \approx 2 \times B \times L \times D \times (27D + H \times L)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">SingleBlock</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">27</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mclose">)</span></span></span></span></span><hr>
+<h2 id="四输出层-final-layer">四、输出层 (Final Layer)</h2>
+<h3 id="41-adaln-modulation">4.1 AdaLN Modulation</h3>
+<p><strong>操作</strong>: SiLU → Linear(D, 2×D)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SiLU 激活</td>
+          <td>Elementwise</td>
+          <td>$B \times D \times 3$</td>
+          <td>$B \times D \times 4 \times 2$</td>
+      </tr>
+      <tr>
+          <td>Linear</td>
+          <td>Linear</td>
+          <td>$2 \times B \times D \times 2D$</td>
+          <td>$B \times (D + 2D) \times 4 + (D \times 2D + 2D) \times 4$</td>
+      </tr>
+      <tr>
+          <td>Chunk</td>
+          <td>Memory</td>
+          <td>$0$</td>
+          <td>$B \times 2D \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="42-layernorm--modulation">4.2 LayerNorm + Modulation</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LayerNorm</td>
+          <td>Normalization</td>
+          <td>$B \times L_{img} \times D \times 5$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 3$</td>
+      </tr>
+      <tr>
+          <td>Scale + Shift</td>
+          <td>Elementwise</td>
+          <td>$B \times L_{img} \times D \times 2$</td>
+          <td>$B \times L_{img} \times D \times 4 \times 2$</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>: 仅处理图像序列部分 (L_img)</p>
+<h3 id="43-输出投影">4.3 输出投影</h3>
+<p><strong>操作</strong>: Linear(D, P² × C_out)</p>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>操作</th>
+          <th>计算负载 (FLOPs)</th>
+          <th>内存访问 (Bytes)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Linear</td>
+          <td>Linear</td>
+          <td>$2 \times B \times L_{img} \times D \times (P^2 \times C_{out})$</td>
+          <td>$B \times L_{img} \times (D + P^2 \times C_{out}) \times 4 + (D \times P^2 \times C_{out} + P^2 \times C_{out}) \times 4$</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="44-final-layer-总计">4.4 Final Layer 总计</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>计算负载 (FLOPs)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>总计</strong></td>
+          <td>$\approx 2 \times B \times L_{img} \times D \times (2D + P^2 \times C_{out})$</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="五完整前向传播总计">五、完整前向传播总计</h2>
+<h3 id="51-总-flops">5.1 总 FLOPs</h3>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mtext>FLOPs</mtext><mtext>total</mtext></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><msub><mtext>FLOPs</mtext><mtext>prepare</mtext></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>+</mo><msub><mi>N</mi><mtext>double</mtext></msub><mo>×</mo><msub><mtext>FLOPs</mtext><mtext>DoubleBlock</mtext></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>+</mo><msub><mi>N</mi><mtext>single</mtext></msub><mo>×</mo><msub><mtext>FLOPs</mtext><mtext>SingleBlock</mtext></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>+</mo><msub><mtext>FLOPs</mtext><mtext>final</mtext></msub></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\text{FLOPs}_{\text{total}} &amp;= \text{FLOPs}_{\text{prepare}} \\
+&amp;+ N_{\text{double}} \times \text{FLOPs}_{\text{DoubleBlock}} \\
+&amp;+ N_{\text{single}} \times \text{FLOPs}_{\text{SingleBlock}} \\
+&amp;+ \text{FLOPs}_{\text{final}}
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:6em;vertical-align:-2.75em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.25em;"><span style="top:-5.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">total</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-0.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.25em;"><span style="top:-5.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">prepare</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">double</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">DoubleBlock</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">single</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">SingleBlock</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-0.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">final</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span></span></span></span></span></span></span><p><strong>展开</strong> (使用简化公式):</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mtext>FLOPs</mtext><mtext>total</mtext></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>≈</mo><mn>2</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>D</mi><mo>×</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>×</mo><msub><mi>C</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>L</mi><mrow><mi>t</mi><mi>x</mi><mi>t</mi></mrow></msub><mo>×</mo><msub><mi>D</mi><mrow><mi>c</mi><mi>t</mi><mi>x</mi></mrow></msub><mo>+</mo><mo stretchy="false">(</mo><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>+</mo><msub><mi>L</mi><mrow><mi>t</mi><mi>x</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo>×</mo><mn>256</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mo>+</mo><msub><mi>N</mi><mtext>double</mtext></msub><mo>×</mo><mo stretchy="false">(</mo><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>+</mo><msub><mi>L</mi><mrow><mi>t</mi><mi>x</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo>×</mo><mo stretchy="false">(</mo><mn>44</mn><mi>D</mi><mo>+</mo><mi>H</mi><mo>×</mo><mo stretchy="false">(</mo><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>+</mo><msub><mi>L</mi><mrow><mi>t</mi><mi>x</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mo>+</mo><msub><mi>N</mi><mtext>single</mtext></msub><mo>×</mo><mo stretchy="false">(</mo><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>+</mo><msub><mi>L</mi><mrow><mi>t</mi><mi>x</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo>×</mo><mo stretchy="false">(</mo><mn>27</mn><mi>D</mi><mo>+</mo><mi>H</mi><mo>×</mo><mo stretchy="false">(</mo><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>+</mo><msub><mi>L</mi><mrow><mi>t</mi><mi>x</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mo>+</mo><msub><mi>L</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi></mrow></msub><mo>×</mo><mo stretchy="false">(</mo><mn>2</mn><mi>D</mi><mo>+</mo><msup><mi>P</mi><mn>2</mn></msup><mo>×</mo><msub><mi>C</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\text{FLOPs}_{\text{total}} &amp;\approx 2 \times B \times D \times \Big[ \\
+&amp;\quad L_{img} \times C_{in} + L_{txt} \times D_{ctx} + (L_{img} + L_{txt}) \times 256 \\
+&amp;\quad + N_{\text{double}} \times (L_{img} + L_{txt}) \times (44D + H \times (L_{img} + L_{txt})) \\
+&amp;\quad + N_{\text{single}} \times (L_{img} + L_{txt}) \times (27D + H \times (L_{img} + L_{txt})) \\
+&amp;\quad + L_{img} \times (2D + P^2 \times C_{out}) \\
+&amp;\Big]
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:10.2241em;vertical-align:-4.8621em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:5.3621em;"><span style="top:-7.3621em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">total</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-5.5721em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-4.0721em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-2.5721em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-1.0479em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:0.7621em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:4.8621em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:5.3621em;"><span style="top:-7.3621em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="delimsizing size2">[</span></span></span></span><span style="top:-5.5721em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">256</span></span></span><span style="top:-4.0721em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">double</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">44</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">))</span></span></span><span style="top:-2.5721em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">single</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">27</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">))</span></span></span><span style="top:-1.0479em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:0.7621em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mord"><span class="delimsizing size2">]</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:4.8621em;"><span></span></span></span></span></span></span></span></span></span></span></span><h3 id="52-主导项分析">5.2 主导项分析</h3>
+<p><strong>注意力计算主导</strong>:
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>attention</mtext></msub><mo>≈</mo><mn>4</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>H</mi><mo>×</mo><mo stretchy="false">(</mo><msub><mi>N</mi><mtext>double</mtext></msub><mo>+</mo><msub><mi>N</mi><mtext>single</mtext></msub><mo stretchy="false">)</mo><mo>×</mo><msup><mi>L</mi><mn>2</mn></msup><mo>×</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{attention}} \approx 4 \times B \times H \times (N_{\text{double}} + N_{\text{single}}) \times L^2 \times d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">attention</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">double</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">single</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9474em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span><p><strong>MLP 计算</strong>:
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>MLP</mtext></msub><mo>≈</mo><mn>16</mn><mo>×</mo><mi>B</mi><mo>×</mo><mo stretchy="false">(</mo><msub><mi>N</mi><mtext>double</mtext></msub><mo>+</mo><msub><mi>N</mi><mtext>single</mtext></msub><mo stretchy="false">)</mo><mo>×</mo><mi>L</mi><mo>×</mo><msup><mi>D</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{MLP}} \approx 16 \times B \times (N_{\text{double}} + N_{\text{single}}) \times L \times D^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">MLP</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">16</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">double</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">single</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8641em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><p><strong>典型值</strong> (D=3072, H=24, N_double=19, N_single=38):</p>
+<ul>
+<li>对于短序列 (L &lt; 1024): MLP 占主导</li>
+<li>对于长序列 (L &gt; 4096): Attention 占主导</li>
+<li>临界点: $L \approx \sqrt{\frac{4D^2}{H \times d}} \approx 2048$</li>
+</ul>
+<h3 id="53-内存访问总计">5.3 内存访问总计</h3>
+<p><strong>参数内存</strong>:
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mtext>Params</mtext></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mn>2</mn><mo>×</mo><mi>D</mi><mo>×</mo><mo stretchy="false">(</mo><mn>6</mn><mi>D</mi><mo>+</mo><mn>3</mn><mi>D</mi><mo>+</mo><msub><mi>C</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>D</mi><mrow><mi>c</mi><mi>t</mi><mi>x</mi></mrow></msub><mo>+</mo><msup><mi>P</mi><mn>2</mn></msup><mo>×</mo><msub><mi>C</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>+</mo><mo stretchy="false">(</mo><msub><mi>N</mi><mtext>double</mtext></msub><mo>+</mo><msub><mi>N</mi><mtext>single</mtext></msub><mo stretchy="false">)</mo><mo>×</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mn>2</mn><mo>×</mo><mi>D</mi><mo>×</mo><mo stretchy="false">(</mo><mn>9</mn><mi>D</mi><mo>+</mo><mn>8</mn><msub><mi>D</mi><mrow><mi>m</mi><mi>l</mi><mi>p</mi></mrow></msub><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\text{Params} &amp;= 2 \times D \times (6D + 3D + C_{in} + D_{ctx} + P^2 \times C_{out}) \\
+&amp;+ (N_{\text{double}} + N_{\text{single}}) \times \Big[ \\
+&amp;\quad 2 \times D \times (9D + 8D_{mlp}) \\
+&amp;\Big]
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:7.2241em;vertical-align:-3.3621em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.8621em;"><span style="top:-6.148em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord text"><span class="mord">Params</span></span></span></span><span style="top:-4.338em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-2.5479em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-0.7379em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.3621em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.8621em;"><span style="top:-6.148em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">6</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">3</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:-4.338em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">double</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">single</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="delimsizing size2">[</span></span></span></span><span style="top:-2.5479em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">9</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">8</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">lp</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:-0.7379em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mord"><span class="delimsizing size2">]</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.3621em;"><span></span></span></span></span></span></span></span></span></span></span></span><p><strong>激活内存</strong> (峰值):
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mtext>Activations</mtext></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>≈</mo><mi>B</mi><mo>×</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mi>L</mi><mo>×</mo><mi>D</mi><mo>×</mo><mn>4</mn><mspace width="1em"/><mtext>(中间特征)</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mo>+</mo><mi>H</mi><mo>×</mo><mi>L</mi><mo>×</mo><mi>d</mi><mo>×</mo><mn>6</mn><mspace width="1em"/><mtext>(QKV)</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mspace width="1em"/><mo>+</mo><mi>L</mi><mo>×</mo><msub><mi>D</mi><mrow><mi>m</mi><mi>l</mi><mi>p</mi></mrow></msub><mspace width="1em"/><mtext>(MLP 中间)</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\text{Activations} &amp;\approx B \times \Big[ \\
+&amp;\quad L \times D \times 4 \quad \text{(中间特征)} \\
+&amp;\quad + H \times L \times d \times 6 \quad \text{(QKV)} \\
+&amp;\quad + L \times D_{mlp} \quad \text{(MLP 中间)} \\
+&amp;\Big]
+\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:8.7em;vertical-align:-4.1em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:4.6em;"><span style="top:-6.6em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord text"><span class="mord">Activations</span></span></span></span><span style="top:-4.81em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-3.31em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:0em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:4.1em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:4.6em;"><span style="top:-6.6em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="delimsizing size2">[</span></span></span></span><span style="top:-4.81em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord">(</span><span class="mord cjk_fallback">中间特征</span><span class="mord">)</span></span></span></span><span style="top:-3.31em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">6</span><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord">(QKV)</span></span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">lp</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord">(MLP </span><span class="mord cjk_fallback">中间</span><span class="mord">)</span></span></span></span><span style="top:0em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mord"><span class="delimsizing size2">]</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:4.1em;"><span></span></span></span></span></span></span></span></span></span></span></span><hr>
+<h2 id="六分布式并行优化分析">六、分布式并行优化分析</h2>
+<h3 id="61-sequence-parallelism-ring-attention">6.1 Sequence Parallelism (Ring Attention)</h3>
+<p><strong>通信量</strong> (每层):
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>Comm</mtext><mtext>ring</mtext></msub><mo>=</mo><mo stretchy="false">(</mo><mi>P</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>×</mo><mi>B</mi><mo>×</mo><mfrac><mi>L</mi><mi>P</mi></mfrac><mo>×</mo><mi>H</mi><mo>×</mo><mi>d</mi><mo>×</mo><mn>4</mn><mo>×</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\text{Comm}_{\text{ring}} = (P - 1) \times B \times \frac{L}{P} \times H \times d \times 4 \times 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord text"><span class="mord">Comm</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">ring</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span><p><strong>说明</strong>:</p>
+<ul>
+<li>P: 序列并行度</li>
+<li>每个 rank 处理 L/P 长度</li>
+<li>需要传输 KV 和 dKV (因子 2)</li>
+</ul>
+<h3 id="62-tensor-parallelism">6.2 Tensor Parallelism</h3>
+<p><strong>通信量</strong> (每层):
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>Comm</mtext><mtext>TP</mtext></msub><mo>=</mo><mn>2</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>L</mi><mo>×</mo><mi>D</mi><mo>×</mo><mn>4</mn><mo>×</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\text{Comm}_{\text{TP}} = 2 \times B \times L \times D \times 4 \times 4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">Comm</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">TP</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span></span><p><strong>说明</strong>:</p>
+<ul>
+<li>4 次 All-Reduce (QKV proj, attn proj, MLP1, MLP2)</li>
+<li>每次通信 BLD 张量</li>
+</ul>
+<h3 id="63-pipeline-parallelism">6.3 Pipeline Parallelism</h3>
+<p><strong>Bubble 比例</strong>:
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Bubble</mtext><mo>=</mo><mfrac><mrow><mo stretchy="false">(</mo><mi>P</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mi>M</mi></mfrac></mrow><annotation encoding="application/x-tex">\text{Bubble} = \frac{(P - 1)}{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">Bubble</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">M</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><p><strong>说明</strong>:</p>
+<ul>
+<li>P: Pipeline stage 数量</li>
+<li>M: Micro-batch 数量</li>
+</ul>
+<hr>
+<h2 id="七优化技巧说明">七、优化技巧说明</h2>
+<h3 id="71-fused-kernels">7.1 Fused Kernels</h3>
+<ol>
+<li><strong>Fused QKV</strong>: 减少 2 次 kernel launch 和内存访问</li>
+<li><strong>Fused RMSNorm</strong>: 单一 kernel 完成归一化和缩放</li>
+<li><strong>Flash Attention</strong>: 降低 HBM 访问从 $O(L^2)$ 到 $O(L)$</li>
+</ol>
+<h3 id="72-gradient-checkpointing">7.2 Gradient Checkpointing</h3>
+<p><strong>内存节约</strong>:
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>Memory</mtext><mtext>saved</mtext></msub><mo>≈</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><msqrt><mi>N</mi></msqrt></mfrac><mo stretchy="false">)</mo><mo>×</mo><mtext>Activations</mtext></mrow><annotation encoding="application/x-tex">\text{Memory}_{\text{saved}} \approx (1 - \frac{1}{\sqrt{N}}) \times \text{Activations}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9275em;vertical-align:-0.2441em;"></span><span class="mord"><span class="mord text"><span class="mord">Memory</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.242em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">saved</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.2514em;vertical-align:-0.93em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.1833em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">Activations</span></span></span></span></span></span><p><strong>额外计算</strong>:
+</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>recompute</mtext></msub><mo>≈</mo><msub><mtext>FLOPs</mtext><mtext>forward</mtext></msub></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{recompute}} \approx \text{FLOPs}_{\text{forward}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">recompute</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">forward</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><h3 id="73-混合精度训练">7.3 混合精度训练</h3>
+<p><strong>内存节约</strong>:</p>
+<ul>
+<li>BF16/FP16: 50% 参数和激活内存</li>
+<li>FP32 主权重: 额外 100% 参数内存</li>
+</ul>
+<p><strong>性能提升</strong>:</p>
+<ul>
+<li>Tensor Core 加速: 2-4× (取决于硬件)</li>
+</ul>
+<hr>
+<h2 id="八计算案例">八、计算案例</h2>
+<h3 id="案例参数设置">案例参数设置</h3>
+<table>
+  <thead>
+      <tr>
+          <th>参数</th>
+          <th>值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>B</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>L_img</td>
+          <td>4096</td>
+      </tr>
+      <tr>
+          <td>L_txt</td>
+          <td>256</td>
+      </tr>
+      <tr>
+          <td>D</td>
+          <td>3072</td>
+      </tr>
+      <tr>
+          <td>H</td>
+          <td>24</td>
+      </tr>
+      <tr>
+          <td>N_double</td>
+          <td>19</td>
+      </tr>
+      <tr>
+          <td>N_single</td>
+          <td>38</td>
+      </tr>
+      <tr>
+          <td>C_in</td>
+          <td>16</td>
+      </tr>
+      <tr>
+          <td>C_out</td>
+          <td>16</td>
+      </tr>
+      <tr>
+          <td>P</td>
+          <td>2</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="计算结果-单位-tflops">计算结果 (单位: TFLOPs)</h3>
+<table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>FLOPs (TFLOPs)</th>
+          <th>占比</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>输入预处理</td>
+          <td>$\approx 0.3$</td>
+          <td>0.1%</td>
+      </tr>
+      <tr>
+          <td>Double Blocks (19层)</td>
+          <td>$\approx 180$</td>
+          <td>45%</td>
+      </tr>
+      <tr>
+          <td>Single Blocks (38层)</td>
+          <td>$\approx 200$</td>
+          <td>50%</td>
+      </tr>
+      <tr>
+          <td>Final Layer</td>
+          <td>$\approx 0.2$</td>
+          <td>0.05%</td>
+      </tr>
+      <tr>
+          <td><strong>总计</strong></td>
+          <td>$\approx 400$</td>
+          <td>100%</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>说明</strong>:</p>
+<ul>
+<li>Attention: ~220 TFLOPs (55%)</li>
+<li>MLP: ~160 TFLOPs (40%)</li>
+<li>Others: ~20 TFLOPs (5%)</li>
+</ul>
+<hr>
+<h2 id="九关键公式总结">九、关键公式总结</h2>
+<h3 id="91-矩阵乘法-flops">9.1 矩阵乘法 FLOPs</h3>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>matmul</mtext></msub><mo stretchy="false">(</mo><mi>M</mi><mo separator="true">,</mo><mi>N</mi><mo separator="true">,</mo><mi>K</mi><mo stretchy="false">)</mo><mo>=</mo><mn>2</mn><mo>×</mo><mi>M</mi><mo>×</mo><mi>N</mi><mo>×</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{matmul}}(M, N, K) = 2 \times M \times N \times K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">matmul</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span></span></span><h3 id="92-attention-flops">9.2 Attention FLOPs</h3>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>attn</mtext></msub><mo>=</mo><mn>4</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>H</mi><mo>×</mo><msup><mi>L</mi><mn>2</mn></msup><mo>×</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{attn}} = 4 \times B \times H \times L^2 \times d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">attn</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9474em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span><h3 id="93-mlp-flops">9.3 MLP FLOPs</h3>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>MLP</mtext></msub><mo>=</mo><mn>2</mn><mo>×</mo><mi>B</mi><mo>×</mo><mi>L</mi><mo>×</mo><mi>D</mi><mo>×</mo><mo stretchy="false">(</mo><msub><mi>D</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><mo>+</mo><msub><mi>D</mi><mrow><mi>o</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{MLP}} = 2 \times B \times L \times D \times (D_{in} + D_{out})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">MLP</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">in</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><h3 id="94-内存访问-通用">9.4 内存访问 (通用)</h3>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Bytes</mtext><mo>=</mo><mo>∑</mo><mo stretchy="false">(</mo><mtext>Inputs</mtext><mo>+</mo><mtext>Outputs</mtext><mo>+</mo><mtext>Weights</mtext><mo stretchy="false">)</mo><mo>×</mo><mtext>dtype_size</mtext></mrow><annotation encoding="application/x-tex">\text{Bytes} = \sum (\text{Inputs} + \text{Outputs} + \text{Weights}) \times \text{dtype\_size}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Bytes</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.6em;vertical-align:-0.55em;"></span><span class="mop op-symbol large-op" style="position:relative;top:0em;">∑</span><span class="mopen">(</span><span class="mord text"><span class="mord">Inputs</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Outputs</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Weights</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">dtype_size</span></span></span></span></span></span><h3 id="95-算术强度">9.5 算术强度</h3>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Arithmetic Intensity</mtext><mo>=</mo><mfrac><mtext>FLOPs</mtext><mtext>Bytes</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{Arithmetic Intensity} = \frac{\text{FLOPs}}{\text{Bytes}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Arithmetic Intensity</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2408em;vertical-align:-0.8804em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">Bytes</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><hr>
+<h2 id="十参考文献和注释">十、参考文献和注释</h2>
+<h3 id="101-理论基础">10.1 理论基础</h3>
+<ul>
+<li><strong>Flash Attention</strong>: Dao et al., 2022</li>
+<li><strong>RoPE</strong>: Su et al., 2021</li>
+<li><strong>MMDiT (Flux)</strong>: Black Forest Labs, 2024</li>
+</ul>
+<h3 id="102-计算假设">10.2 计算假设</h3>
+<ol>
+<li>所有浮点数为 FP32 (4 bytes)</li>
+<li>不考虑 padding 开销</li>
+<li>Flash Attention 内存访问按理论最优估计</li>
+<li>忽略小于 O(BLD) 的低阶项</li>
+</ol>
+<h3 id="103-符号约定">10.3 符号约定</h3>
+<ul>
+<li>$\times$: 标量乘法</li>
+<li>$\cdot$: 矩阵乘法</li>
+<li>$\approx$: 近似 (忽略低阶项)</li>
+<li>$O(\cdot)$: 渐近复杂度</li>
+</ul>
+<hr>
+<h2 id="附录-典型配置表">附录: 典型配置表</h2>
+<table>
+  <thead>
+      <tr>
+          <th>配置</th>
+          <th>D</th>
+          <th>H</th>
+          <th>N_double</th>
+          <th>N_single</th>
+          <th>参数量 (B)</th>
+          <th>FLOPs/Token (GFLOPs)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Small</td>
+          <td>1536</td>
+          <td>12</td>
+          <td>12</td>
+          <td>24</td>
+          <td>~2</td>
+          <td>~50</td>
+      </tr>
+      <tr>
+          <td>Base</td>
+          <td>3072</td>
+          <td>24</td>
+          <td>19</td>
+          <td>38</td>
+          <td>~12</td>
+          <td>~200</td>
+      </tr>
+      <tr>
+          <td>Large</td>
+          <td>4096</td>
+          <td>32</td>
+          <td>24</td>
+          <td>48</td>
+          <td>~20</td>
+          <td>~400</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Token 定义</strong>: 单个序列位置的单次前向传播</p>
+<hr>
+<p><strong>文档版本</strong>: v1.0<br>
+<strong>生成日期</strong>: 2025年11月2日<br>
+<strong>适用模型</strong>: MMDiT (Flux) - Open-Sora 实现</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="https://tju-yxq.github.io/"><img src="/img/favicon.png" />小段子的技术博客</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/%E5%8B%A4%E5%B7%A5%E5%8A%A9%E5%AD%A6%E5%9F%BA%E5%9C%B0%E8%B4%9F%E8%B4%A3%E4%BA%BA%E8%81%8C%E8%B4%A3/" data-toggle="tooltip" data-placement="top" title="勤工助学基地负责人职责">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+<script src="https://giscus.app/client.js"
+        data-repo="tju-yxq/yxq-blog-source"
+        data-repo-id="R_kgDOP0dLgw"
+        data-category="Comments"
+        data-category-id="DIC_kwDOP0dLg84CvygP"
+        data-mapping="pathname"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-theme="light_high_contrast"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+
+
+
+<link href="https://xxx.xxx.com/dist/Artalk.css" rel="stylesheet" />
+<script src="https://xxx.xxx.com/dist/Artalk.js"></script>
+
+
+<div id="Comments"></div>
+
+<script>
+    Artalk.init({
+        el: '#Comments',
+        pageKey: 'https:\/\/tju-yxq.github.io\/post\/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97\/',
+        pageTitle: 'MMDiT计算负载和访存分析',
+        server: 'https:\/\/xxx.xxx.com',
+        site: 'xxx blog',
+    })
+</script>
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="http://www.never-ending.info/">小卷毛的博客</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:3023209091@tju.edu.cn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/tju-yxq">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="小段子的技术博客" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 小段子的技术博客 2025
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+<style>
+   
+   
+  :root {
+    --ai-chat-primary: #007bff;
+    --ai-chat-bg: #ffffff;
+    --ai-chat-text: #212529;
+    --ai-chat-user-msg-bg: #007bff;
+    --ai-chat-user-msg-text: #ffffff;
+    --ai-chat-bot-msg-bg: #f8f9fa;
+    --ai-chat-bot-msg-text: #212529;
+    --ai-chat-border: #dee2e6;
+  }
+
+  #ai-chat-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--ai-chat-primary);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+    z-index: 9998;
+  }
+  #ai-chat-button:hover {
+    transform: scale(1.1);
+  }
+
+  #ai-chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 90%;
+    max-width: 400px;
+    height: 70vh;
+    max-height: 600px;
+    background-color: var(--ai-chat-bg);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 9999;
+  }
+  #ai-chat-window.active {
+    transform: scale(1);
+  }
+
+  #ai-chat-header {
+    background-color: var(--ai-chat-primary);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  #ai-chat-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  #ai-chat-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  #ai-chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-chat-message {
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    line-height: 1.4;
+  }
+  .ai-chat-message.user {
+    background-color: var(--ai-chat-user-msg-bg);
+    color: var(--ai-chat-user-msg-text);
+    align-self: flex-end;
+  }
+  .ai-chat-message.bot {
+    background-color: var(--ai-chat-bot-msg-bg);
+    color: var(--ai-chat-bot-msg-text);
+    align-self: flex-start;
+  }
+  .ai-chat-message.bot.loading {
+    display: flex;
+    align-items: center;
+  }
+  .ai-chat-message.bot.loading .dot {
+      width: 8px;
+      height: 8px;
+      margin: 0 2px;
+      background-color: #aaa;
+      border-radius: 50%;
+      display: inline-block;
+      animation: ai-chat-blink 1.4s infinite both;
+  }
+  .ai-chat-message.bot.loading .dot:nth-child(2) { animation-delay: 0.2s; }
+  .ai-chat-message.bot.loading .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes ai-chat-blink {
+      0% { opacity: 0.2; }
+      20% { opacity: 1; }
+      100% { opacity: 0.2; }
+  }
+
+   
+  .ai-chat-message.bot h1,
+  .ai-chat-message.bot h2,
+  .ai-chat-message.bot h3 {
+    margin: 0.5em 0 0.3em 0;
+    font-weight: bold;
+  }
+  .ai-chat-message.bot h1 { font-size: 1.2em; }
+  .ai-chat-message.bot h2 { font-size: 1.1em; }
+  .ai-chat-message.bot h3 { font-size: 1.05em; }
+  
+  .ai-chat-message.bot p {
+    margin: 0.3em 0;
+  }
+  
+  .ai-chat-message.bot code {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+  
+  .ai-chat-message.bot pre {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 0.5em 0;
+  }
+  
+  .ai-chat-message.bot pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  .ai-chat-message.bot ul,
+  .ai-chat-message.bot ol {
+    margin: 0.3em 0;
+    padding-left: 1.2em;
+  }
+  
+  .ai-chat-message.bot li {
+    margin: 0.1em 0;
+  }
+  
+  .ai-chat-message.bot a {
+    color: var(--ai-chat-primary);
+    text-decoration: none;
+  }
+  
+  .ai-chat-message.bot a:hover {
+    text-decoration: underline;
+  }
+  
+  .ai-chat-message.bot strong {
+    font-weight: bold;
+  }
+  
+  .ai-chat-message.bot em {
+    font-style: italic;
+  }
+
+
+  #ai-chat-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid var(--ai-chat-border);
+    flex-shrink: 0;
+  }
+  #ai-chat-input {
+    flex-grow: 1;
+    border: 1px solid var(--ai-chat-border);
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+  #ai-chat-input:focus {
+    outline: none;
+    border-color: var(--ai-chat-primary);
+  }
+  #ai-chat-form button {
+    background-color: var(--ai-chat-primary);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+</style>
+
+
+<button id="ai-chat-button">
+  <span>🤖</span>
+</button>
+
+<div id="ai-chat-window">
+  <div id="ai-chat-header">
+    <h3>AI 知识库助手</h3>
+    <button id="ai-chat-close-btn">&times;</button>
+  </div>
+  <div id="ai-chat-messages">
+    <div class="ai-chat-message bot">你好！我是基于本站文章的 AI 助手，有什么可以帮你的吗？</div>
+  </div>
+  <form id="ai-chat-form">
+    <input id="ai-chat-input" type="text" placeholder="输入你的问题..." autocomplete="off">
+    <button type="submit">→</button>
+  </form>
+</div>
+
+<script>
+
+
+(function() {
+  
+  
+  const API_BASE_URL = 'http:\/\/localhost:8000';
+
+  
+  const chatButton = document.getElementById('ai-chat-button');
+  const chatWindow = document.getElementById('ai-chat-window');
+  const closeBtn = document.getElementById('ai-chat-close-btn');
+  const chatForm = document.getElementById('ai-chat-form');
+  const chatInput = document.getElementById('ai-chat-input');
+  const messagesContainer = document.getElementById('ai-chat-messages');
+
+  
+  let chatHistory = []; 
+
+  
+  chatButton.addEventListener('click', () => toggleChatWindow());
+  closeBtn.addEventListener('click', () => toggleChatWindow(false));
+  chatForm.addEventListener('submit', handleFormSubmit);
+
+  function toggleChatWindow(forceOpen) {
+    if (forceOpen === true) {
+      chatWindow.classList.add('active');
+    } else if (forceOpen === false) {
+      chatWindow.classList.remove('active');
+    } else {
+      chatWindow.classList.toggle('active');
+    }
+  }
+
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    const question = chatInput.value.trim();
+    if (!question) return;
+
+    
+    addMessage(question, 'user');
+    chatInput.value = '';
+
+    
+    const loadingMessage = addMessage('', 'bot', true);
+    
+    try {
+      
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question,
+          chat_history: chatHistory.map(item => [item.human, item.ai])
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`服务器错误: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const answer = data.answer;
+
+      
+      updateBotMessage(loadingMessage, answer);
+
+      
+      chatHistory.push({ human: question, ai: answer });
+
+    } catch (error) {
+      console.error("AI Chat Error:", error);
+      let errorMessage = "抱歉，出现了错误。请稍后再试。";
+      
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        errorMessage = "无法连接到AI服务器，请检查网络连接或稍后再试。";
+      } else if (error.message.includes('服务器错误')) {
+        errorMessage = `服务器暂时不可用 (${error.message})`;
+      }
+      
+      updateBotMessage(loadingMessage, errorMessage);
+    }
+  }
+
+  function addMessage(text, type, isLoading = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('ai-chat-message', type);
+
+    if (isLoading) {
+      messageDiv.classList.add('loading');
+      messageDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+    } else {
+      
+      messageDiv.innerText = text;
+    }
+    
+    messagesContainer.appendChild(messageDiv);
+    scrollToBottom();
+    return messageDiv;
+  }
+
+  
+  function renderMarkdown(text) {
+    
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+    
+    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+
+    
+    html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    
+    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    
+    html = html.replace(/^[-*+] (.+)$/gm, 'TMPLI_START$1TMPLI_END');
+    
+    
+    html = html.replace(/^\d+\. (.+)$/gm, 'TMPOLI_START$1TMPOLI_END');
+    
+    
+    html = html.replace(/(TMPLI_START.*?TMPLI_END(\nTMPLI_START.*?TMPLI_END)*)/g, function(match) {
+      return '<ul>' + match.replace(/TMPLI_START/g, '<li>').replace(/TMPLI_END/g, '</li>') + '</ul>';
+    });
+    
+    html = html.replace(/(TMPOLI_START.*?TMPOLI_END(\nTMPOLI_START.*?TMPOLI_END)*)/g, function(match) {
+      return '<ol>' + match.replace(/TMPOLI_START/g, '<li>').replace(/TMPOLI_END/g, '</li>') + '</ol>';
+    });
+
+    
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+    
+    
+    if (html && !html.match(/^(<h[1-6]|<ul|<ol|<pre)/)) {
+      html = '<p>' + html + '</p>';
+    }
+
+    return html;
+  }
+
+  function updateBotMessage(messageDiv, newText) {
+    messageDiv.classList.remove('loading');
+    
+    const renderedHtml = renderMarkdown(newText);
+    messageDiv.innerHTML = renderedHtml;
+    scrollToBottom();
+  }
+
+  function scrollToBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+})();
+</script>
+
+
+
+</body>
+</html>

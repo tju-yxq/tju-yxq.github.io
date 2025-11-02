@@ -6,8 +6,15 @@
     <description>Recent content on 小段子的技术博客</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 13 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Nov 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://tju-yxq.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MMDiT计算负载和访存分析</title>
+      <link>https://tju-yxq.github.io/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/</link>
+      <pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://tju-yxq.github.io/post/open-sora2%E8%B5%84%E6%BA%90%E6%8E%A8%E7%AE%97/</guid>
+      <description>&lt;h2 id=&#34;模型参数定义&#34;&gt;模型参数定义&lt;/h2&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;参数符号&lt;/th&gt;&#xA;          &lt;th&gt;含义&lt;/th&gt;&#xA;          &lt;th&gt;典型值&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;B&lt;/td&gt;&#xA;          &lt;td&gt;Batch Size&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;L_img&lt;/td&gt;&#xA;          &lt;td&gt;图像序列长度&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;L_txt&lt;/td&gt;&#xA;          &lt;td&gt;文本序列长度&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;L&lt;/td&gt;&#xA;          &lt;td&gt;总序列长度 (L_txt + L_img)&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;D&lt;/td&gt;&#xA;          &lt;td&gt;Hidden Size (隐藏层维度)&lt;/td&gt;&#xA;          &lt;td&gt;3072&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;H&lt;/td&gt;&#xA;          &lt;td&gt;Number of Heads (注意力头数)&lt;/td&gt;&#xA;          &lt;td&gt;24&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;d&lt;/td&gt;&#xA;          &lt;td&gt;Head Dimension (D / H)&lt;/td&gt;&#xA;          &lt;td&gt;128&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;N_double&lt;/td&gt;&#xA;          &lt;td&gt;Double Stream Block 层数&lt;/td&gt;&#xA;          &lt;td&gt;19&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;N_single&lt;/td&gt;&#xA;          &lt;td&gt;Single Stream Block 层数&lt;/td&gt;&#xA;          &lt;td&gt;38&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;r_mlp&lt;/td&gt;&#xA;          &lt;td&gt;MLP Ratio&lt;/td&gt;&#xA;          &lt;td&gt;4.0&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;D_mlp&lt;/td&gt;&#xA;          &lt;td&gt;MLP Hidden Dimension (D × r_mlp)&lt;/td&gt;&#xA;          &lt;td&gt;12288&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;C_in&lt;/td&gt;&#xA;          &lt;td&gt;输入通道数&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;C_out&lt;/td&gt;&#xA;          &lt;td&gt;输出通道数&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;P&lt;/td&gt;&#xA;          &lt;td&gt;Patch Size&lt;/td&gt;&#xA;          &lt;td&gt;2&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;D_vec&lt;/td&gt;&#xA;          &lt;td&gt;Vector Input Dimension&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;D_ctx&lt;/td&gt;&#xA;          &lt;td&gt;Context Input Dimension&lt;/td&gt;&#xA;          &lt;td&gt;-&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一输入预处理阶段-prepare_block_inputs&#34;&gt;一、输入预处理阶段 (prepare_block_inputs)&lt;/h2&gt;&#xA;&lt;h3 id=&#34;11-图像输入投影-img_in&#34;&gt;1.1 图像输入投影 (img_in)&lt;/h3&gt;&#xA;&lt;p&gt;&lt;strong&gt;操作&lt;/strong&gt;: Linear(C_in, D)&lt;/p&gt;</description>
+    </item>
     <item>
       <title>勤工助学基地负责人职责</title>
       <link>https://tju-yxq.github.io/post/%E5%8B%A4%E5%B7%A5%E5%8A%A9%E5%AD%A6%E5%9F%BA%E5%9C%B0%E8%B4%9F%E8%B4%A3%E4%BA%BA%E8%81%8C%E8%B4%A3/</link>
@@ -38,13 +45,6 @@
     </item>
     <item>
       <title></title>
-      <link>https://tju-yxq.github.io/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tju-yxq.github.io/about/</guid>
-      <description>&lt;h3 id=&#34;about-me&#34;&gt;About Me&lt;/h3&gt;&#xA;&lt;p&gt;Hi, I&amp;rsquo;m &lt;strong&gt;Duan&lt;/strong&gt;, also known as &lt;strong&gt;小段子 (Xiao Duanzi)&lt;/strong&gt;. I am an undergraduate student majoring in &lt;strong&gt;Cybersecurity&lt;/strong&gt; at &lt;strong&gt;Tianjin University&lt;/strong&gt;, currently conducting research in Professor Yitao Hu&amp;rsquo;s lab with a focus on Text-to-Video generation.&lt;/p&gt;&#xA;&lt;p&gt;I am passionate about technology and firmly believe that the core purpose of code is to solve real-world problems. My primary focus is on &lt;strong&gt;Backend Development&lt;/strong&gt; and &lt;strong&gt;Data Science&lt;/strong&gt;, and I enjoy the process of uncovering value from vast amounts of data and transforming it into reliable products through robust software architecture. This blog is where I document my technical thoughts, project experiences, and learning journey.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title></title>
       <link>https://tju-yxq.github.io/notes/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://tju-yxq.github.io/notes/</guid>
@@ -63,6 +63,13 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://tju-yxq.github.io/archive/</guid>
       <description></description>
+    </item>
+    <item>
+      <title>关于</title>
+      <link>https://tju-yxq.github.io/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://tju-yxq.github.io/about/</guid>
+      <description>&lt;h2 id=&#34;关于我&#34;&gt;关于我&lt;/h2&gt;&#xA;&lt;p&gt;您好，我是&lt;strong&gt;小段子&lt;/strong&gt;。一名就读于&lt;strong&gt;天津大学网络空间安全专业&lt;/strong&gt;的在读本科生，目前在胡一涛老师实验室下进行科研学习，目前的研究方向是文生视频，对技术充满热情，坚信代码的核心是解决实际问题。我专注于&lt;strong&gt;后端开发&lt;/strong&gt;与&lt;strong&gt;数据科学&lt;/strong&gt;领域，享受从海量数据中挖掘价值，并用坚实的软件架构将其实现为可靠产品的过程。这个博客是我记录技术思考、项目实践和学习心得的地方。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
